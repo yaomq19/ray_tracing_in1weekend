@@ -1,2 +1,3 @@
-main.exe:main.cpp
-	g++ -g -o main.exe main.cpp -I ./include
+all:main
+main:./src/metal.cpp 
+	g++ -o main.exe -DDEBUG ./src/metal.cpp  -I ./include -g
