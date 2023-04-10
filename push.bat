@@ -1,3 +1,4 @@
+@echo off
 :ERROR
 git add .
 git commit -m "none"
@@ -6,3 +7,5 @@ git pull origin master
 if %errorlevel%==1 (goto ERROR) else (goto END)
 
 :END
+echo on
+echo success
