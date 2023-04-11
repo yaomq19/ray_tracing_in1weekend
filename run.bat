@@ -1,3 +1,3 @@
 make
-main.exe ./output/output_dielectric.ppm
-.\PpmViewer.exe .\output\output_dielectric.ppm
+main.exe ./output/output_manySphere.ppm
+.\PpmViewer.exe .\output\output_manySphere.ppm

@@ -1,8 +1,7 @@
 #ifndef MYMATH_H
 #define MYMATH_H
-
 #include <stdlib.h>
-#include <vec3.h>
+#include <math.h>
 #define MAXFLOAT 3.402823E38
 static unsigned long long seed = 1;
 
@@ -19,12 +18,5 @@ void srand48(unsigned int i)
     seed  = (((long long int)i) << 16) | rand();
 }
 
-//返回一个由一个虚拟单位球的球心到该球体内任意一点（不超过球体边界）的长度方向向量
-vec3 random_in_unit_sphere(){
-    vec3 p;
-    do{
-        p = 2.0 * vec3(drand48(),drand48(),drand48()) - vec3(1,1,1);
-    }while(dot(p,p)>=1.0);
-    return p;
-}
+
 #endif

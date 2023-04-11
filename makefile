@@ -1,3 +1,3 @@
 all:main
-main:./src/dielectric.cpp 
-	g++ -o main.exe -DDEBUG ./src/dielectric.cpp  -I ./include -g
+main:./src/manySphere.cpp 
+	g++ -o main.exe -DDEBUG ./src/manySphere.cpp  -I ./include -g

@@ -1,7 +1,6 @@
-#pragma once
 #ifndef VEC3H
 #define VEC3H
-#include <math.h>
+#include <myMath.h>
 #include <stdlib.h>
 #include <iostream>
 class vec3{
@@ -54,18 +53,32 @@ class vec3{
     inline vec3& operator*=(const float t){e[0] *= t;e[1] *= t;e[2] *= t;return *this;}
     inline vec3& operator/=(const float t){e[0] /= t;e[1] /= t;e[2] /= t;return *this;}
 
-    inline vec3 operator*(const float t)
+    inline vec3 operator*(const float t)const
     {  
         return vec3(this->e[0] * t,this->e[1] * t,this->e[2] * t);
     }
-    inline vec3 operator/(const float t)
+    inline vec3 operator/(const float t)const
     {
         return vec3(this->e[0] / t,this->e[1] / t,this->e[2] / t);
     }
-
+    inline vec3& operator=(const vec3& other){
+        this->e[0] = other.e[0]; 
+        this->e[1] = other.e[1]; 
+        this->e[2] = other.e[2];
+        return *this;
+    }
     inline float length()const{return sqrt(e[0]*e[0] + e[1]*e[1] + e[2]*e[2]);}
     inline float squared_length()const{return e[0]*e[0] + e[1]*e[1] + e[2]*e[2];}
     inline void make_unit_vector();
+    inline vec3 normalize()const{return *this / length();};
+    inline vec3& normalized(){
+        *this/=length(); 
+        return *this;
+    }
+    void print()
+    {
+        std::cout<<e[0]<<" "<<e[1]<<" "<<e[2]<<std::endl;
+    }
 };
 
 inline vec3 operator+(const vec3 &v1,const vec3 &v2){return vec3(v1.e[0]+v2.e[0],v1.e[1]+v2.e[1],v1.e[2]+v2.e[2]);}
@@ -90,4 +103,12 @@ inline vec3 cross(const vec3 &v1,const vec3 &v2){
     
 inline vec3 unit_vector(vec3 v){return v/v.length();}
 
+//返回一个由一个虚拟单位球的球心到该球体内任意一点（不超过球体边界）的长度方向向量
+vec3 random_in_unit_sphere(){
+    vec3 p;
+    do{
+        p = 2.0 * vec3(drand48(),drand48(),drand48()) - vec3(1,1,1);
+    }while(dot(p,p)>=1.0);
+    return p;
+}
 #endif
