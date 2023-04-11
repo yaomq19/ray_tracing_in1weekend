@@ -4,17 +4,20 @@
 class ray
 {
     public:
-    vec3 A;//光线起点位置
-    vec3 B;//光线方向
-
     ray(){}
-    ray(const vec3&a,const vec3&b){
-        A=a;
-        B=unit_vector(b);
-    }
-    vec3 origin()const{return A;}
-    vec3 direction()const{return B;}
+    ray(const vec3&ori,const vec3&d,float time = 0.0):orig(ori),dir(d),tm(time){}
+    vec3 origin()const{return orig;}
+    vec3 direction()const{return dir;}
+    float time()const{return tm;}
     //返回该光线传播t秒后的位置
-    vec3 point_at_parameter(float t)const{return A + t*B;}
+    inline vec3 point_at_parameter(float t)const{return orig + t*dir;}
+    inline vec3 at(float t){
+        return point_at_parameter(t);
+    }
+
+    private:
+    vec3 orig;//光线起点位置
+    vec3 dir;//光线方向
+    float tm;
 };
 #endif
