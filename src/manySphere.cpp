@@ -4,6 +4,7 @@
 #include<hitable_list.h> 
 #include<camera.h>
 #include<renderer.h>
+#include<time.h>
 hitable* random_scene(int n)
 {
     hitable** list = new hitable*[n+1];
@@ -39,7 +40,7 @@ int main(int argc, char* argv[])
     int rsl_hor = 200;//水平分辨率
     int rsl_ver =200;//垂直分辨率
     int msaa = 100;//MSAA采样频率
-    
+    srand(time(NULL));
     // hitable *list[5];
     // list[0] = new sphere(vec3(0.0, 0.0, -1.0), 0.5,new lambertian(vec3(0.8,0.3,0.3)));
     // list[1] = new sphere(vec3(0.0, -100.5, -1.0), 100,new lambertian(vec3(0.8,0.8,0.0)));

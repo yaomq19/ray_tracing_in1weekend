@@ -12,7 +12,8 @@ vec3 random_in_unit_disk()
 }
 float random_float(float t0,float t1)
 {
-    return (t0+t1)/2.f;
+    float ratio = (float)(rand()%1000)/1000.f;
+    return t0 + ratio * (t1-t0);
 }
 class camera{
     private:
