@@ -1,3 +1,3 @@
 all:main
-main:./src/manySphere.cpp 
-	g++ -o main.exe -DDEBUG ./src/manySphere.cpp  -I ./include -g
+main:./src/$(fn).cpp 
+	g++ -o main -DDEBUG ./src/$(fn).cpp  -I ./include -g

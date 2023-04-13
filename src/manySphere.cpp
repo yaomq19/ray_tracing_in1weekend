@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
     // list[4] = new sphere(vec3(-1.0, 0.0, -1.0), -0.45,new dielectric(1.5));
     hitable *world = random_scene(500);//Create a world containing the two objects.  You can use any other objects you like.
 
-    camera cam(vec3(-2,2,1), vec3(0,0,-1), vec3(0,1,0), 45, (float)rsl_hor/rsl_ver, 0.1);
+    camera cam(vec3(-2,2,1), vec3(0,0,-1), vec3(0,1,0), 45, (float)rsl_hor/rsl_ver, 1,1);
     renderer ren(world,cam,rsl_hor,rsl_ver,argv[1],msaa);
     ren.render();
     return 0;

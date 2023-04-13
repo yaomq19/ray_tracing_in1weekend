@@ -1,3 +1,3 @@
-make
-main.exe ./output/output_manySphere.ppm
-.\PpmViewer.exe .\output\output_manySphere.ppm
+make fn=%1
+main.exe ./output/%2.ppm
+.\PpmViewer.exe .\output\%2.ppm

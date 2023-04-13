@@ -12,7 +12,7 @@ vec3 random_in_unit_disk()
 }
 float random_float(float t0,float t1)
 {
-    
+    return (t0+t1)/2.f;
 }
 class camera{
     private:
@@ -24,6 +24,8 @@ class camera{
 
     float lens_radius;
     float time0,time1;// shutter open/close times
+    
+    public:
     //相机位置，相机目视点，相机up向量，垂直可视角，视野宽高比，成像平面与相机原点距离，水平分辨率，垂直分辨率
     camera(const vec3&lookfrom, const vec3& lookat, const vec3& vup, float vfov, float aspect_ratio,
     float aperture,float focus_dist,float _time0 = 0,float _time1 = 0)
