@@ -1,3 +1,2 @@
-make fn=%1
-main.exe ./output/%2.ppm
-.\PpmViewer.exe .\output\%2.ppm
+.\bin\main.exe .\output\%1.ppm > .\log\runLog.txt
+.\PpmViewer.exe .\output\%1.ppm 
