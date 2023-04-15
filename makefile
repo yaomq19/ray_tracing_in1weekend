@@ -1,3 +1,3 @@
 all:main
 main:./src/$(fn).cpp 
-	g++ -o main -DDEBUG ./src/$(fn).cpp  -I ./include -g
+	g++ -o main ./src/$(fn).cpp  -I ./include -g
