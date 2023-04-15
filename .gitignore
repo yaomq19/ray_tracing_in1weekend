@@ -12,5 +12,5 @@
 *.vsix
 
 log/runLog.txt
-output/*
-build/*
+output/
+build/
