@@ -29,15 +29,9 @@ class renderer
     {
         std::ofstream ofs(filename);
         ofs<<"P3\n"<<rslu_hor<<" "<<rslu_ver<<"\n255\n";
-        #ifdef DEBUG
-        auto start = GetTickCount();
-        #endif
-
         for(int j=rslu_ver-1;j>=0;j--)
         {
-            #ifdef DEBUG
             std::cout<<j<<" of "<<rslu_ver<<std::endl;
-            #endif
             for(int i=0;i<rslu_hor;i++)
             {
                 vec3 col = vec3(0,0,0);
@@ -56,11 +50,6 @@ class renderer
                 ofs << ir << " " << ig << " " << ib << "\n"; //write it out to the file.  I used 255 for
             }
         }
-        #ifdef DEBUG
-        auto end = GetTickCount();
-        std::cout<<"run time = "<<end-start<<std::endl;
-        #endif
-
         ofs.close();
     }
     private:
