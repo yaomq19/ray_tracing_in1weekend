@@ -11,5 +11,6 @@
 # Built Visual Studio Code Extensions
 *.vsix
 
-./bin/main.exe
 ./log/runLog.txt
+./output/*
+./build/*

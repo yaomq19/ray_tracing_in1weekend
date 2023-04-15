@@ -69,11 +69,17 @@ class vec3{
     }
     inline float length()const{return sqrt(e[0]*e[0] + e[1]*e[1] + e[2]*e[2]);}
     inline float squared_length()const{return e[0]*e[0] + e[1]*e[1] + e[2]*e[2];}
+    inline float length_squared()const{return e[0]*e[0] + e[1]*e[1] + e[2]*e[2];}
     inline void make_unit_vector();
-    inline vec3 normalize()const{return *this / length();};
-    inline vec3& normalized(){
-        *this/=length(); 
-        return *this;
+    inline vec3& normalize(){*this/=length(); 
+        return *this;};
+    inline vec3 normalized()const{
+        return *this / length();
+    }
+    inline bool near_zero()const
+    {
+        const auto s = 1e-8; // 定义一个很小的常量
+        return (fabs(x()) < s) && (fabs(y()) < s) && (fabs(z()) < s);
     }
     void print()
     {
@@ -110,5 +116,12 @@ vec3 random_in_unit_sphere(){
         p = 2.0 * vec3(drand48(),drand48(),drand48()) - vec3(1,1,1);
     }while(dot(p,p)>=1.0);
     return p;
+}
+//返回一个每一项都在[0,1]之间的向量
+vec3 random_vec3(){
+    float x = (float)(rand()%1000)/1000.f;
+    float y = (float)(rand()%1000)/1000.f;
+    float z = (float)(rand()%1000)/1000.f;
+    return vec3(x,y,z);
 }
 #endif

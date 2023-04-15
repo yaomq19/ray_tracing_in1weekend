@@ -1,1 +1,0 @@
-nohup ./bin/main ./output/$1.ppm > .\log\runLog.txt & 

@@ -15,10 +15,10 @@ class renderer
     int rslu_ver;
     int msaa;
 
-    hitable * world;
+    hitable_list world;
     char *filename;
     public:
-    renderer(hitable* world,const camera&cam,int rslu_hor,int rslu_ver,char *filename,int msaa=4):world(world),cam(cam)
+    renderer(hitable_list world,const camera&cam,int rslu_hor,int rslu_ver,char *filename,int msaa=4):world(world),cam(cam)
     {
         this->rslu_hor=rslu_hor;
         this->rslu_ver=rslu_ver;
@@ -41,6 +41,7 @@ class renderer
                     ray r = cam.get_ray(u,v);
                     col += color(r,world,0);
                 }
+                //col取值范围[0,1],[0,1],[0,1]
                 col /= float(msaa);
                 //一种gamma校正
                 col = vec3(sqrt(col[0]),sqrt(col[1]),sqrt(col[2]));
@@ -53,11 +54,11 @@ class renderer
         ofs.close();
     }
     private:
-    //求r射线和world世界的相交颜色
-    vec3 color(const ray&r,hitable *world,int&& depth){
+    //求r射线和world世界的相交颜色,范围[0,1]
+    vec3 color(const ray&r,hitable_list world,int&& depth){
     hit_record rec; 	
     //如果与世界有击中记录则		
-    if(world->hit(r,0.0,MAXFLOAT,rec)){
+    if(world.hit(r,0.0,MAXFLOAT,rec)){
         ray scattered;
         vec3 attenuation;
         if(depth<50 && rec.mat_ptr->scatter(r,rec,attenuation,scattered)){

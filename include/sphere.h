@@ -1,14 +1,16 @@
 #ifndef SPHEREH
 #define SPHEREH
 #include <hitable.h>
+#include <memory>
+using namespace std;
 class sphere:public hitable{
     public:
     vec3 center;//球体中心坐标
     float radius;//球体半径
-    material* mat_ptr;
+    shared_ptr<material> mat_ptr;
 
     sphere(){}
-    sphere(vec3 cen,float r,material* m):center(cen),radius(r),mat_ptr(m){}
+    sphere(vec3 cen,float r,shared_ptr<material> m):center(cen),radius(r),mat_ptr(m){}
     //抽象方法hitable::hit的重写，具体实现了该方法
     virtual bool hit(const ray& r, float tmin, float tmax, hit_record& rec) const;
     
