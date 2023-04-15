@@ -56,16 +56,16 @@ class renderer
     private:
     //求r射线和world世界的相交颜色,范围[0,1]
     vec3 color(const ray&r,hitable_list world,int&& depth){
-    hit_record rec; 	
-    //如果与世界有击中记录则		
-    if(world.hit(r,0.0,MAXFLOAT,rec)){
-        ray scattered;
-        vec3 attenuation;
-        if(depth<50 && rec.mat_ptr->scatter(r,rec,attenuation,scattered)){
-            return attenuation * color(scattered,world,depth+1);
-        }else{
-            return vec3(0,0,0);
-        }
+        hit_record rec; 	
+        //如果与世界有击中记录则		
+        if(world.hit(r,0.0,MAXFLOAT,rec)){
+            ray scattered;
+            vec3 attenuation;
+            if(depth<50 && rec.mat_ptr->scatter(r,rec,attenuation,scattered)){
+                return attenuation * color(scattered,world,depth+1);
+            }else{
+                return vec3(0,0,0);
+            }
     }
     //如果没有击中记录则用背景填充	
     else{

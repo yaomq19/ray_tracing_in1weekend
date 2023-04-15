@@ -107,7 +107,11 @@ inline vec3 cross(const vec3 &v1,const vec3 &v2){
             );
         }
     
-inline vec3 unit_vector(vec3 v){return v/v.length();}
+inline vec3 unit_vector(vec3 v){
+    if(v.length() > 0)
+        return v/v.length();
+    else return vec3(0,0,0);
+}
 
 //返回一个由一个虚拟单位球的球心到该球体内任意一点（不超过球体边界）的长度方向向量
 vec3 random_in_unit_sphere(){

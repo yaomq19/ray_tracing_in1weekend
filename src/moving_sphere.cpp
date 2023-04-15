@@ -15,7 +15,7 @@ hitable_list random_scene()
     shared_ptr<lambertian> ground_material = make_shared<lambertian>(vec3(0.5, 0.5, 0.5));
     world.add(make_shared<sphere>(vec3(0,-1000,0), 1000, ground_material));
     
-
+    
     for(int a = -11; a < 11; a++)
     {
         for(int b = -11; b < 11; b++)
@@ -83,7 +83,7 @@ int main(int argc, char* argv[])
     
 
     //快门时间设置到0至1秒内
-    camera cam(lookfrom, lookat, vup, 20, aspect_ratio, dist_to_focus,0.0,1.0);
+    camera cam(lookfrom, lookat, vup, 20, aspect_ratio, aperture, dist_to_focus, 0.0, 1.0);
     renderer ren(world,cam,image_width,image_height,argv[1],samples_per_pixel);
     ren.render();
     return 0;

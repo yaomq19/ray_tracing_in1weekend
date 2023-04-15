@@ -5,11 +5,11 @@
       "name": "C/C++ Runner: Debug Session",
       "type": "cppdbg",
       "request": "launch",
-      "args": ["./output/output_MSAA.ppm"],
+      "args": ["output.ppm"],
       "stopAtEntry": false,
       "externalConsole": true,
       "cwd": "d:/githubRepositories/ray_tracing_in1weekend",
-      "program": "d:/githubRepositories/ray_tracing_in1weekend/main.exe",
+      "program": "d:/githubRepositories/ray_tracing_in1weekend/build/rayTracing.exe",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
