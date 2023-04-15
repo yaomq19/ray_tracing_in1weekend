@@ -2,6 +2,7 @@
 #define HITABLELISTH 
 #include<memory>
 #include<vector>
+#include "aabb.h"
 using namespace std;
 class hitable_list:public hitable{
     public:
@@ -10,6 +11,8 @@ class hitable_list:public hitable{
     hitable_list(){}
     //对所有hitable*进行测试，在返回值处返回是否有命中，并在rec处返回离屏幕最近的一个点的命中记录
     virtual bool hit(const ray& r,float tmin,float tmax, hit_record& rec) const; 
+    virtual bool bounding_box(
+            float time0, float time1, aabb& output_box) const override;
     void add(shared_ptr<hitable> ptr){
         list.push_back(ptr);
     }
@@ -29,5 +32,19 @@ bool hitable_list::hit(const ray& r,float tmin,float tmax, hit_record& rec) cons
         }
     }
     return hit_anything;
+}
+bool hitable_list::bounding_box(float time0, float time1, aabb& output_box) const {
+    if (list.empty()) return false;
+
+    aabb temp_box;
+    bool first_box = true;
+
+    for (const auto& object : list) {
+        if (!object->bounding_box(time0, time1, temp_box)) return false;
+        output_box = first_box ? temp_box : surrounding_box(output_box, temp_box);
+        first_box = false;
+    }
+
+    return true;
 }
 #endif

@@ -2,7 +2,9 @@
 #define MOVING_SPHERE_H
 #include <hitable.h>
 #include <memory>
+#include "aabb.h"
 //移动的小球
+aabb surrounding_box(aabb box0, aabb box1);
 class moving_sphere : public hitable {
     public:
         moving_sphere() {}
@@ -13,6 +15,8 @@ class moving_sphere : public hitable {
 
         virtual bool hit(
             const ray& r, float t_min, float t_max, hit_record& rec) const override;
+        virtual bool bounding_box(
+            float _time0, float _time1, aabb& output_box) const override;
         //求小球在
         vec3 center(float time) const;
 
@@ -54,6 +58,16 @@ bool moving_sphere::hit(const ray& r, float t_min, float t_max, hit_record& rec)
     rec.set_face_normal(r, outward_normal);
     rec.mat_ptr = mat_ptr;
 
+    return true;
+}
+bool moving_sphere::bounding_box(float _time0, float _time1, aabb& output_box) const {
+    aabb box0(
+        center(_time0) - vec3(radius, radius, radius),
+        center(_time0) + vec3(radius, radius, radius));
+    aabb box1(
+        center(_time1) - vec3(radius, radius, radius),
+        center(_time1) + vec3(radius, radius, radius));
+    output_box = surrounding_box(box0, box1);
     return true;
 }
 #endif

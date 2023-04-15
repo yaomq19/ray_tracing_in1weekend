@@ -4,9 +4,8 @@
 #include<hitable.h>
 #include<myMath.h>
 #include<fstream>
-#ifdef DEBUG
-#include <windows.h>
-#endif
+#include <chrono>
+
 class renderer
 {
     public:
@@ -27,8 +26,13 @@ class renderer
     }
     void render()
     {
+        
+    
+    
         std::ofstream ofs(filename);
         ofs<<"P3\n"<<rslu_hor<<" "<<rslu_ver<<"\n255\n";
+
+        auto start = std::chrono::steady_clock::now();
         for(int j=rslu_ver-1;j>=0;j--)
         {
             std::cout<<j<<" of "<<rslu_ver<<std::endl;
@@ -51,6 +55,9 @@ class renderer
                 ofs << ir << " " << ig << " " << ib << "\n"; //write it out to the file.  I used 255 for
             }
         }
+        auto end = std::chrono::steady_clock::now();
+        auto diff = end - start;
+    std::cout << "Time elapsed: " << std::chrono::duration<double, std::milli>(diff).count() << " ms\n";
         ofs.close();
     }
     private:

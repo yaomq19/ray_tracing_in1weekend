@@ -4,6 +4,7 @@
 #include "vec3.h"
 #include "ray.h"
 #include "hitable.h"
+#include "texture.h"
 class material{
     public:
     virtual bool scatter(const ray& r_in,const hit_record& rec,vec3& attenuation,ray& scattered)const = 0;
@@ -34,8 +35,9 @@ class material{
 };
 class lambertian:public material{
     public:
-    vec3 albedo;
-    lambertian(const vec3& a):albedo(a){}
+    shared_ptr<texture> albedo;
+    lambertian(const color& a) : albedo(make_shared<solid_color>(a)) {}
+    lambertian(shared_ptr<texture> a) : albedo(a) {}
     virtual bool scatter(const ray& r_in,const hit_record& rec,vec3& attenuation,ray& scattered)const{
         auto scatter_direction = rec.normal + random_in_unit_sphere();
         /*  如果散射后的光线方向非常接近于零向量（即光线散射后几乎不改变方向），
@@ -47,7 +49,7 @@ class lambertian:public material{
                 scatter_direction = rec.normal;
         //注意不改变光线的产生时间，也就是把反射后的光线看成与之前的同一条
         scattered = ray(rec.p, scatter_direction, r_in.time());
-        attenuation = albedo;
+        attenuation = albedo->value(rec.u, rec.v, rec.p);
         return true;
     }
 };
