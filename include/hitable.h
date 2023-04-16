@@ -2,6 +2,7 @@
 #define HITABLEH
 #include <ray.h>
 #include <math.h>
+#include "myMath.h"
 #include <memory>
 #include "aabb.h"
 using namespace std;
@@ -103,8 +104,8 @@ rotate_y::rotate_y(shared_ptr<hitable> p, float angle) : ptr(p) {
     cos_theta = cos(radians);
     hasbox = ptr->bounding_box(0, 1, bbox);
 
-    point3 min( infinity,  infinity,  infinity);
-    point3 max(-infinity, -infinity, -infinity);
+    point3 min( MAXFLOAT,  MAXFLOAT,  MAXFLOAT);
+    point3 max(-MAXFLOAT, -MAXFLOAT, -MAXFLOAT);
 
     for (int i = 0; i < 2; i++) {
         for (int j = 0; j < 2; j++) {

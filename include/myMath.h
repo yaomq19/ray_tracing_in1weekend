@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "vec3.h"
-#define MAXFLOAT 3.402823E38
+#define MAXFLOAT (3.402823E38)
 static unsigned long long seed = 1;
 
 //生成一个均匀分布与[0,1]的double随机数
@@ -49,5 +49,9 @@ vec3 random_vec3(){
     float y = (float)(rand()%1000)/1000.f;
     float z = (float)(rand()%1000)/1000.f;
     return vec3(x,y,z);
+}
+inline float degrees_to_radians(float angle){
+    float radians = angle * 3.14159265358979323846f / 180.0f; 
+    return radians;
 }
 #endif
