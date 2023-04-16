@@ -43,7 +43,3 @@ vec3 random_vec3(){
     float z = (float)(rand()%1000)/1000.f;
     return vec3(x,y,z);
 }
-inline float degrees_to_radians(float angle){
-    float radians = angle * 3.14159265358979323846f / 180.0f; 
-    return radians;
-}

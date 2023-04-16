@@ -14,6 +14,9 @@ int random_int(int min, int max);
 vec3 random_in_unit_sphere();
 //返回一个每一项都在[0,1]之间的向量
 vec3 random_vec3();
-inline float degrees_to_radians(float angle);
+inline float degrees_to_radians(float angle){
+    float radians = angle * 3.14159265358979323846f / 180.0f; 
+    return radians;
+}
 
 #endif

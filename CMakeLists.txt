@@ -3,9 +3,9 @@ project(rayTracing)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_BUILD_TYPE DEBUG)
 add_library(rayTracingLib STATIC 
-./src/aabb.cpp
 ./src/axis_aligned_rect.cpp
 ./src/box.cpp
+./src/bvh.cpp
 ./src/camera.cpp
 ./src/hitable.cpp
 ./src/hitable_list.cpp

@@ -11,8 +11,10 @@ class ray
     //返回光线产生的时间
     float time()const;
     //返回该光线传播t秒后的位置
-    inline vec3 point_at_parameter(float t)const;
-    inline vec3 at(float t)const;
+    inline vec3 point_at_parameter(float t)const{return orig + t*dir;}
+    inline vec3 at(float t)const{
+        return point_at_parameter(t);
+    }
 
     private:
     vec3 orig;//光线起点位置
