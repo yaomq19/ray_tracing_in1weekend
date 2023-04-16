@@ -1,6 +1,6 @@
 #ifndef RENDERER_H
 #define RENDERER_H
-#include<camera.h>
+#include"camera.h"
 #include<hitable.h>
 #include<myMath.h>
 #include<fstream>
