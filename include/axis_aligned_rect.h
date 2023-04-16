@@ -9,8 +9,8 @@ class xy_rect : public hitable {
         xy_rect() {}
 
         xy_rect(float _x0, float _x1, float _y0, float _y1, float _k, 
-            shared_ptr<material> mat)
-            : x0(_x0), x1(_x1), y0(_y0), y1(_y1), k(_k), mp(mat) {};
+            shared_ptr<material> mat,vec3 n)
+            : x0(_x0), x1(_x1), y0(_y0), y1(_y1), k(_k), mp(mat),normal(n) {};
 
         virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const override;
 
@@ -24,14 +24,15 @@ class xy_rect : public hitable {
     public:
         shared_ptr<material> mp;
         float x0, x1, y0, y1, k;
+        vec3 normal;
 };
 class xz_rect : public hitable {
     public:
         xz_rect() {}
 
         xz_rect(float _x0, float _x1, float _z0, float _z1, float _k,
-            shared_ptr<material> mat)
-            : x0(_x0), x1(_x1), z0(_z0), z1(_z1), k(_k), mp(mat) {};
+            shared_ptr<material> mat,vec3 n)
+            : x0(_x0), x1(_x1), z0(_z0), z1(_z1), k(_k), mp(mat),normal(n) {};
 
         virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const override;
 
@@ -45,14 +46,15 @@ class xz_rect : public hitable {
     public:
         shared_ptr<material> mp;
         float x0, x1, z0, z1, k;
+        vec3 normal;
 };
 class yz_rect : public hitable {
     public:
         yz_rect() {}
 
         yz_rect(float _y0, float _y1, float _z0, float _z1, float _k,
-            shared_ptr<material> mat)
-            : y0(_y0), y1(_y1), z0(_z0), z1(_z1), k(_k), mp(mat) {};
+            shared_ptr<material> mat,vec3 n)
+            : y0(_y0), y1(_y1), z0(_z0), z1(_z1), k(_k), mp(mat),normal(n) {};
 
         virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const override;
 
@@ -66,6 +68,7 @@ class yz_rect : public hitable {
     public:
         shared_ptr<material> mp;
         float y0, y1, z0, z1, k;
+        vec3 normal;
 };
 bool xy_rect::hit(const ray& r, float t_min, float t_max, hit_record& rec) const {
     auto t = (k-r.origin().z()) / r.direction().z();
@@ -78,8 +81,7 @@ bool xy_rect::hit(const ray& r, float t_min, float t_max, hit_record& rec) const
     rec.u = (x-x0)/(x1-x0);
     rec.v = (y-y0)/(y1-y0);
     rec.t = t;
-    auto outward_normal = vec3(0, 0, 1);
-    rec.set_face_normal(r, outward_normal);
+    rec.set_face_normal(r, normal);
     rec.mat_ptr = mp;
     rec.p = r.at(t);
     return true;
@@ -95,13 +97,11 @@ bool xz_rect::hit(const ray& r, float t_min, float t_max, hit_record& rec) const
     rec.u = (x-x0)/(x1-x0);
     rec.v = (z-z0)/(z1-z0);
     rec.t = t;
-    auto outward_normal = vec3(0, 1, 0);
-    rec.set_face_normal(r, outward_normal);
+    rec.set_face_normal(r, normal);
     rec.mat_ptr = mp;
     rec.p = r.at(t);
     return true;
 }
-
 bool yz_rect::hit(const ray& r, float t_min, float t_max, hit_record& rec) const {
     auto t = (k-r.origin().x()) / r.direction().x();
     if (t < t_min || t > t_max)
@@ -113,8 +113,7 @@ bool yz_rect::hit(const ray& r, float t_min, float t_max, hit_record& rec) const
     rec.u = (y-y0)/(y1-y0);
     rec.v = (z-z0)/(z1-z0);
     rec.t = t;
-    auto outward_normal = vec3(1, 0, 0);
-    rec.set_face_normal(r, outward_normal);
+    rec.set_face_normal(r, normal);
     rec.mat_ptr = mp;
     rec.p = r.at(t);
     return true;
