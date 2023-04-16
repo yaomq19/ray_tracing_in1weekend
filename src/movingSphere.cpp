@@ -1,4 +1,9 @@
 #include "movingSphere.h"
+moving_sphere::moving_sphere() {}
+moving_sphere::moving_sphere(
+    vec3 cen0, vec3 cen1, float _time0, float _time1, float r, shared_ptr<material> m)
+    : center0(cen0), center1(cen1), time0(_time0), time1(_time1), radius(r), mat_ptr(m)
+{};
 vec3 moving_sphere::center(float time) const {
     return center0 + ((time - time0) / (time1 - time0))*(center1 - center0);
 }

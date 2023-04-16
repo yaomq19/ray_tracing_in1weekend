@@ -3,6 +3,7 @@
 #include<memory>
 #include<vector>
 #include "aabb.h"
+#include "hitable.h"
 using namespace std;
 class hitable_list:public hitable{
     public:

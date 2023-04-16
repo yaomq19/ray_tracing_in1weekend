@@ -3,7 +3,9 @@
 #include <stdlib.h>
 #include <math.h>
 #include <iostream>
-
+class vec3;
+typedef vec3 point3;
+typedef vec3 color;
 class vec3{
     public:
     float e[3];
@@ -37,8 +39,7 @@ class vec3{
     static vec3 random(float min,float max);
     void print();
 };
-typedef vec3 point3;
-typedef vec3 color;
+
 inline vec3 operator+(const vec3 &v1,const vec3 &v2);
 inline vec3 operator-(const vec3 &v1,const vec3 &v2);
 inline vec3 operator*(const vec3 &v1,const vec3 &v2);
@@ -47,6 +48,9 @@ inline vec3 operator*(const float t,const vec3 &v2);
 inline float dot(const vec3 &v1,const vec3 &v2);
 inline vec3 cross(const vec3 &v1,const vec3 &v2);
 inline vec3 unit_vector(vec3 v);
+
+
+
 
 
 
@@ -154,6 +158,4 @@ inline vec3 unit_vector(vec3 v){
         return v/v.length();
     else return vec3(0,0,0);
 }
-
-
 #endif

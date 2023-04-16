@@ -2,6 +2,7 @@
 #define AARECT_H
 #include "vec3.h"
 #include "hitable.h"
+#include "ray.h"
 class xy_rect : public hitable {
     public:
         xy_rect() {}
