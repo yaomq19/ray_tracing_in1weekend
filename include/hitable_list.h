@@ -6,7 +6,7 @@
 using namespace std;
 class hitable_list:public hitable{
     public:
-    vector<shared_ptr<hitable>> list;
+    vector<shared_ptr<hitable>> objects;
 
     hitable_list(){}
     hitable_list(std::shared_ptr<hitable> obj){add(obj);}
@@ -15,14 +15,14 @@ class hitable_list:public hitable{
     virtual bool bounding_box(
             float time0, float time1, aabb& output_box) const override;
     void add(shared_ptr<hitable> ptr){
-        list.push_back(ptr);
+        objects.push_back(ptr);
     }
 };
 bool hitable_list::hit(const ray& r,float tmin,float tmax, hit_record& rec) const{
     hit_record temp_rec;
     bool hit_anything = false;
     float closest_so_far = tmax;
-    for(const auto & it:list){
+    for(const auto & it:objects){
         //注意第三个参数为closest_so_far保证了只能取到比当前记录更近的记录
         if(it->hit(r,tmin,closest_so_far,temp_rec)){
             hit_anything = true;
@@ -35,12 +35,12 @@ bool hitable_list::hit(const ray& r,float tmin,float tmax, hit_record& rec) cons
     return hit_anything;
 }
 bool hitable_list::bounding_box(float time0, float time1, aabb& output_box) const {
-    if (list.empty()) return false;
+    if (objects.empty()) return false;
 
     aabb temp_box;
     bool first_box = true;
 
-    for (const auto& object : list) {
+    for (const auto& object : objects) {
         if (!object->bounding_box(time0, time1, temp_box)) return false;
         output_box = first_box ? temp_box : surrounding_box(output_box, temp_box);
         first_box = false;

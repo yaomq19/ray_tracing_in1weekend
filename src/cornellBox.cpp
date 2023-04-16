@@ -1,14 +1,16 @@
 #include<iostream>
-#include"material.h"
-#include "bvh.h"
-#include<vec3.h>
-#include<sphere.h>
-#include<hitable_list.h> 
-#include<movingSphere.h>
-#include<camera.h>
-#include<renderer.h>
 #include<time.h>
 #include<memory>
+#include "material.h"
+#include "bvh.h"
+#include "axis_aligned_rect.h"
+#include "vec3.h"
+#include "sphere.h"
+#include "hitable_list.h"
+#include "movingSphere.h"
+#include "camera.h"
+#include "renderer.h"
+
 hitable_list random_scene()
 {
     hitable_list world;
@@ -76,6 +78,50 @@ hitable_list earth() {
 
     return hitable_list(globe);
 }
+hitable_list simple_light() {
+    hitable_list objects;
+
+    auto pertext = make_shared<noise_texture>(4);
+    objects.add(make_shared<sphere>(point3(0,-1000,0), 1000, make_shared<lambertian>(pertext)));
+    objects.add(make_shared<sphere>(point3(0,2,0), 2, make_shared<lambertian>(pertext)));
+
+    auto difflight = make_shared<diffuse_light>(color(4,4,4));
+    objects.add(make_shared<xy_rect>(3, 5, 1, 3, -2, difflight));
+
+    return objects;
+}
+hitable_list two_light() {
+    hitable_list objects;
+
+    shared_ptr<texture> pertext = make_shared<noise_texture>(4);
+
+    shared_ptr<material> lam_pertext_mat = make_shared<lambertian>(pertext);
+    objects.add(make_shared<sphere>(point3(0,-1000,0), 1000, lam_pertext_mat));
+    objects.add(make_shared<sphere>(point3(0,2,0), 2, lam_pertext_mat));
+
+    shared_ptr<material> difflight = make_shared<diffuse_light>(color(4,4,4));
+    objects.add(make_shared<xy_rect>(3, 5, 1, 3, -2, difflight));
+    objects.add(make_shared<sphere>(point3(0,10,0), 5, difflight));
+
+    return objects;
+}
+hitable_list cornell_box() {
+    hitable_list objects;
+
+    auto red   = make_shared<lambertian>(color(.65, .05, .05));
+    auto white = make_shared<lambertian>(color(.73, .73, .73));
+    auto green = make_shared<lambertian>(color(.12, .45, .15));
+    auto light = make_shared<diffuse_light>(color(15, 15, 15));
+
+    objects.add(make_shared<yz_rect>(0, 555, 0, 555, 555, green));
+    objects.add(make_shared<yz_rect>(0, 555, 0, 555, 0, red));
+    objects.add(make_shared<xz_rect>(213, 343, 227, 332, 554, light));
+    objects.add(make_shared<xz_rect>(0, 555, 0, 555, 0, white));
+    objects.add(make_shared<xz_rect>(0, 555, 0, 555, 555, white));
+    objects.add(make_shared<xy_rect>(0, 555, 0, 555, 555, white));
+
+    return objects;
+}
 int main(int argc, char* argv[])
 {
     if(argc!=2){
@@ -83,43 +129,48 @@ int main(int argc, char* argv[])
         exit(1);
     }
     srand(time(NULL));
-
-    float aperture;//相机透镜光圈大小,越大越模糊
     //world
-    
-    hitable_list world = random_scene();//Create a world containing the two objects.  You can use any other objects you like.
-    
-    switch (0) {
-        default:
+    hitable_list world;//Create a world containing the two objects.  You can use any other objects you like.
+    color background(0,0,0);
+    switch (6) {
         case 1:
             world = random_scene();
-            aperture = 0.1;
             break;
         case 2:
             world = two_spheres();
-            aperture=0.5;
             break;
-        
-        case 4:
+        case 3:
             world = earth();
+            break;
+        case 4:
+            world = simple_light();
+            break;
+        case 5:
+            world = two_light();
+            break;
+        case 6:
+            world = cornell_box();
             break;
     }
 
     //camera
-    vec3 lookfrom(13,2,3);//相机位置
-    vec3 lookat(0,0,0);//相机目标点
+    vec3 lookfrom(278,278,-800);//相机位置
+    vec3 lookat(278,278,0);//相机目标点
     vec3 vup(0,1,0);//相机up向量
     auto vfov = 40.0;
-    auto aspect_ratio = 16.0 / 9.0;
+    auto aspect_ratio = 1;
+    float aperture = 0.0;//相机透镜光圈大小,越大越模糊
     float dist_to_focus = 10.0;//表示摄像机焦点到透镜的距离
-    camera cam(lookfrom, lookat, vup, 20, aspect_ratio, aperture, dist_to_focus, 0.0, 1.0);
-    
+    float exposure_time_start = 0.0;//曝光开始时间
+    float exposure_time_end = 1.0;//曝光结束时间
+    camera cam(lookfrom, lookat, vup, vfov, aspect_ratio, aperture, dist_to_focus, exposure_time_start, exposure_time_end);
     //renderer
-    int image_width = 400;
+    int image_width = 600;
     int image_height = static_cast<int>(image_width / aspect_ratio);
     const int max_depth = 50;//递归最大深度
-    int samples_per_pixel = 100;
+    int samples_per_pixel = 200;
     renderer ren(world,cam,image_width,image_height,samples_per_pixel,max_depth);
+    ren.setBackground(color(0,0,0));
     ren.EnableBVH();
     ren.render(argv[1]);
     return 0;
