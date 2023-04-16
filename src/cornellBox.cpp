@@ -127,10 +127,10 @@ int main(int argc, char* argv[])
     }
 
     //camera
-    vec3 lookfrom(278,278,-800);//相机位置
-    vec3 lookat(278,278,0);//相机目标点
+    vec3 lookfrom(278,278,1);//相机位置
+    vec3 lookat(278,278,2);//相机目标点
     vec3 vup(0,1,0);//相机up向量
-    auto vfov = 40;
+    auto vfov = 90;
     auto aspect_ratio = 1;
     float aperture = 0.0;//相机透镜光圈大小,越大越模糊
     float dist_to_focus = 10.0;//表示摄像机焦点到透镜的距离
@@ -141,7 +141,7 @@ int main(int argc, char* argv[])
     int image_width = 600;
     int image_height = static_cast<int>(image_width / aspect_ratio);
     const int max_depth = 50;//递归最大深度
-    int samples_per_pixel = 100;
+    int samples_per_pixel = 200;
     renderer ren(world,cam,image_width,image_height,samples_per_pixel,max_depth);
     ren.setBackground(color(0,0,0));
     ren.EnableBVH();

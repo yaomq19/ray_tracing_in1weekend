@@ -21,21 +21,25 @@ struct hit_record{
 //抽象量，所有射线可以命中的物体的抽象
 class hitable{
     public:
-    //抽象方法：判断时间作用域在tmin和tmax之间的射线r与当前物体是否相交
-    //如果不相交则返回false
-    //如果相交则返回true，并在rec处以引用返回命中纪录
-    virtual bool hit(const ray& r, float tmin, float tmax, hit_record& rec) const = 0;  //The ray intersect
+    /*
+        判断时间作用域在tmin和tmax之间的射线r与当前物体是否相交,相交返回true,否则返回false
+        并在rec处以引用返回命中纪录
+    */
+    virtual bool hit(const ray& r, float tmin, float tmax, hit_record& rec) const = 0; 
+
+    /*
+        判断该物体是否有bounding_box，有则返回true，否则返回false，并再output_box处以引用返回该包围盒
+        time0 and time1是物体运动的开始时间和结束时间，用来计算output_box的大小
+    */
     virtual bool bounding_box(float time0, float time1, aabb& output_box) const = 0;
     //返回既包围box0又包围box1的大包围盒
     aabb surrounding_box(aabb box0, aabb box1) const{
         vec3 small(fmin(box0.min().x(), box1.min().x()),
                     fmin(box0.min().y(), box1.min().y()),
                     fmin(box0.min().z(), box1.min().z()));
-
         vec3 big(fmax(box0.max().x(), box1.max().x()),
                 fmax(box0.max().y(), box1.max().y()),
                 fmax(box0.max().z(), box1.max().z()));
-
         return aabb(small,big);
     }
 };
