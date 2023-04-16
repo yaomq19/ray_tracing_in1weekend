@@ -63,14 +63,14 @@ class diffuse_light : public material  {
 
 
 bool lambertian::scatter(const ray& r_in,const hit_record& rec,vec3& attenuation,ray& scattered)const{
-    auto scatter_direction = rec.normal + random_in_unit_sphere();
+    auto scatter_direction = rec.getNormal() + random_in_unit_sphere();
     /*  如果散射后的光线方向非常接近于零向量（即光线散射后几乎不改变方向），
         那么就将光线的方向设置为表面的法向量。
         这是因为如果光线散射后的方向变化很小，
         那么散射后的光线仍然会沿着原来的方向前进，
         这会导致渲染结果出现一些奇怪的现象。*/
     if (scatter_direction.near_zero())
-            scatter_direction = rec.normal;
+            scatter_direction = rec.getNormal();
     //注意不改变光线的产生时间，也就是把反射后的光线看成与之前的同一条
     scattered = ray(rec.p, scatter_direction, r_in.time());
     //击中点材质的固有色由纹理产生
@@ -78,11 +78,11 @@ bool lambertian::scatter(const ray& r_in,const hit_record& rec,vec3& attenuation
     return true;
 }
 bool metal::scatter(const ray& r_in,const hit_record& rec,vec3& attenuation,ray& scattered)const{
-    vec3 reflected = reflect(unit_vector(r_in.direction()),rec.normal);
+    vec3 reflected = reflect(unit_vector(r_in.direction()),rec.getNormal());
     scattered = ray(rec.p,reflected+fuzz*random_in_unit_sphere(),r_in.time());
     attenuation = albedo;
     //保证了r_in不是从平面的背面射来的
-    return (dot(scattered.direction(),rec.normal)>0);
+    return (dot(scattered.direction(),rec.getNormal())>0);
 }
 vec3 metal::reflect(const vec3& v,const vec3&n)const{
     return v-2*dot(v,n)*n;
@@ -90,21 +90,21 @@ vec3 metal::reflect(const vec3& v,const vec3&n)const{
 bool dielectric::scatter(const ray& r_in,const hit_record& rec,vec3& attenuation,ray& scatter)const
 {
     vec3 outward_normal;
-    vec3 reflected = reflect(r_in.direction(),rec.normal);//向量reflect函数的输入是向量v和向量向量n
+    vec3 reflected = reflect(r_in.direction(),rec.getNormal());//向量reflect函数的输入是向量v和向量向量n
     float ni_over_nt;//射线refraction index ratio
     attenuation = vec3(1.0,1.0,1.0);//声明各种颜色的常数值，不一定
     vec3 refracted;//射线refraction ratio 或者是向量refract函数的输入是向量v和向量
     float reflect_prob;
     float cosine;
-    if(dot(r_in.direction(),rec.normal) > 0){//如果向量向量n是反的 或者
-        outward_normal = -rec.normal;//向量reflect函数的输入是向量v和向量向量n的反
+    if(dot(r_in.direction(),rec.getNormal()) > 0){//如果向量向量n是反的 或者
+        outward_normal = -rec.getNormal();//向量reflect函数的输入是向量v和向量向量n的反
         ni_over_nt = ref_idx;//ni_over_nt计算的是射线refraction index ratio 或者是
-        cosine=ref_idx*dot(r_in.direction(),rec.normal)/r_in.direction().length();//cosine
+        cosine=ref_idx*dot(r_in.direction(),rec.getNormal())/r_in.direction().length();//cosine
     }
     else{//如果向量向量n是正的 或者 或者 向量reflect函数的输入是向量
-        outward_normal = rec.normal;//向量reflect函数的输入是向量v和向量向量n的正
+        outward_normal = rec.getNormal();//向量reflect函数的输入是向量v和向量向量n的正
         ni_over_nt = 1.0f/ref_idx;//ni_over_nt计算的是射线refraction ratio
-        cosine= -dot(r_in.direction(),rec.normal)/r_in.direction().length();//cosine 或者是1/
+        cosine= -dot(r_in.direction(),rec.getNormal())/r_in.direction().length();//cosine 或者是1/
     }
     if(refract(r_in.direction(),outward_normal,ni_over_nt,refracted)){//向量refract
         reflect_prob  = schlick(cosine,ref_idx);//schlick函数的输入是射线cosine和射线refraction ratio

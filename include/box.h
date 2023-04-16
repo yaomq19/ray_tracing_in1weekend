@@ -7,16 +7,10 @@ class box : public hitable  {
     public:
         box() {}
         box(const point3& p0, const point3& p1, shared_ptr<material> ptr);
-
         virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const override;
+        virtual bool bounding_box(float time0, float time1, aabb& output_box) const override;
 
-        //bounding_box就是该盒子本身
-        virtual bool bounding_box(float time0, float time1, aabb& output_box) const override {
-            output_box = aabb(box_min, box_max);
-            return true;
-        }
-
-    public:
+    private:
         point3 box_min;//最小点
         point3 box_max;//最大点
         hitable_list sides;//面
@@ -35,9 +29,12 @@ box::box(const point3& p0, const point3& p1, shared_ptr<material> ptr) {
     sides.add(make_shared<yz_rect>(p0.y(), p1.y(), p0.z(), p1.z(), p1.x(), ptr,vec3(1,0,0)));//右面
     sides.add(make_shared<yz_rect>(p0.y(), p1.y(), p0.z(), p1.z(), p0.x(), ptr,vec3(-1,0,0)));//左面
 }
-
 bool box::hit(const ray& r, float t_min, float t_max, hit_record& rec) const {
     return sides.hit(r, t_min, t_max, rec);
 }
-
+bool box::bounding_box(float time0, float time1, aabb& output_box) const {
+    //bounding_box就是该盒子本身
+    output_box = aabb(box_min, box_max);
+    return true;
+}
 #endif

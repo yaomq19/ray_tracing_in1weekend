@@ -10,14 +10,15 @@
 #include "movingSphere.h"
 #include "camera.h"
 #include "renderer.h"
-
+#include "box.h"
 hitable_list test() {
     hitable_list objects;
 
     shared_ptr<material> red   = make_shared<lambertian>(color(0.65, 0.05, 0.05));
+    shared_ptr<material> green   = make_shared<lambertian>(color(0.00, 0.75, 0.55));
     shared_ptr<material> light = make_shared<diffuse_light>(color(3, 3, 3));
 
-    //objects.add(make_shared<sphere>(vec3(0,0,-6), 3,  red));
+    objects.add(make_shared<sphere>(vec3(0,0,-6), 3,  green));
     objects.add(make_shared<xy_rect>(-5, 5, -5, 5, -6, red,vec3(0,0,1)));//红色平面
     objects.add(make_shared<xy_rect>(-5, 5, -5, 5, 6, light,vec3(0,0,-1)));//平面光源
     return objects;

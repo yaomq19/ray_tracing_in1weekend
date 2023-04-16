@@ -1,27 +1,16 @@
 #ifndef AARECT_H
 #define AARECT_H
-
 #include "vec3.h"
 #include "hitable.h"
-
 class xy_rect : public hitable {
     public:
         xy_rect() {}
-
         xy_rect(float _x0, float _x1, float _y0, float _y1, float _k, 
             shared_ptr<material> mat,vec3 n)
             : x0(_x0), x1(_x1), y0(_y0), y1(_y1), k(_k), mp(mat),normal(n) {};
-
         virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const override;
-
-        virtual bool bounding_box(float time0, float time1, aabb& output_box) const override {
-            // The bounding box must have non-zero width in each dimension, so pad the Z
-            // dimension a small amount.
-            output_box = aabb(point3(x0,y0, k-0.0001), point3(x1, y1, k+0.0001));
-            return true;
-        }
-
-    public:
+        virtual bool bounding_box(float time0, float time1, aabb& output_box) const override;
+    private:
         shared_ptr<material> mp;
         float x0, x1, y0, y1, k;
         vec3 normal;
@@ -81,7 +70,7 @@ bool xy_rect::hit(const ray& r, float t_min, float t_max, hit_record& rec) const
     rec.u = (x-x0)/(x1-x0);
     rec.v = (y-y0)/(y1-y0);
     rec.t = t;
-    rec.set_face_normal(r, normal);
+    rec.setNormal(normal);
     rec.mat_ptr = mp;
     rec.p = r.at(t);
     return true;
@@ -97,7 +86,7 @@ bool xz_rect::hit(const ray& r, float t_min, float t_max, hit_record& rec) const
     rec.u = (x-x0)/(x1-x0);
     rec.v = (z-z0)/(z1-z0);
     rec.t = t;
-    rec.set_face_normal(r, normal);
+    rec.setNormal(normal);
     rec.mat_ptr = mp;
     rec.p = r.at(t);
     return true;
@@ -113,9 +102,15 @@ bool yz_rect::hit(const ray& r, float t_min, float t_max, hit_record& rec) const
     rec.u = (y-y0)/(y1-y0);
     rec.v = (z-z0)/(z1-z0);
     rec.t = t;
-    rec.set_face_normal(r, normal);
+    rec.setNormal(normal);
     rec.mat_ptr = mp;
     rec.p = r.at(t);
+    return true;
+}
+bool xy_rect::bounding_box(float time0, float time1, aabb& output_box) const {
+    // The bounding box must have non-zero width in each dimension, so pad the Z
+    // dimension a small amount.
+    output_box = aabb(point3(x0,y0, k-0.0001), point3(x1, y1, k+0.0001));
     return true;
 }
 #endif

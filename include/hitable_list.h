@@ -6,17 +6,25 @@
 using namespace std;
 class hitable_list:public hitable{
     public:
-    vector<shared_ptr<hitable>> objects;
-
+    //默认函数
     hitable_list(){}
+
+    //有参构造
     hitable_list(std::shared_ptr<hitable> obj){add(obj);}
-    //对所有hitable*进行测试，在返回值处返回是否有命中，并在rec处返回离屏幕最近的一个点的命中记录
-    virtual bool hit(const ray& r,float tmin,float tmax, hit_record& rec) const; 
-    virtual bool bounding_box(
-            float time0, float time1, aabb& output_box) const override;
-    void add(shared_ptr<hitable> ptr){
-        objects.push_back(ptr);
+
+    //让作用域在[tmin,tmax]的射线r对objects中所有hitable进行命中检测，在rec处返回记录
+    virtual bool hit(const ray& r,float tmin,float tmax, hit_record& rec) const override; 
+
+    //
+    virtual bool bounding_box(float time0, float time1, aabb& output_box) const override;
+
+    void add(shared_ptr<hitable> ptr);
+
+    vector<shared_ptr<hitable>> getObjects()const{
+        return objects;
     }
+    private:
+    vector<shared_ptr<hitable>> objects;
 };
 bool hitable_list::hit(const ray& r,float tmin,float tmax, hit_record& rec) const{
     hit_record temp_rec;
@@ -47,5 +55,8 @@ bool hitable_list::bounding_box(float time0, float time1, aabb& output_box) cons
     }
 
     return true;
+}
+void hitable_list::add(shared_ptr<hitable> ptr){
+    objects.push_back(ptr);
 }
 #endif

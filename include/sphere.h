@@ -9,20 +9,13 @@ class sphere:public hitable{
     vec3 center;//球体中心坐标
     float radius;//球体半径
     shared_ptr<material> mat_ptr;
-
     sphere(){}
     sphere(vec3 cen,float r,shared_ptr<material> m):center(cen),radius(r),mat_ptr(m){}
     //抽象方法hitable::hit的重写，具体实现了该方法
     virtual bool hit(const ray& r, float tmin, float tmax, hit_record& rec) const;
     virtual bool bounding_box(float time0, float time1, aabb& output_box) const override;
-
     private:
-        static void get_sphere_uv(const point3& p, float& u, float& v) {
-            auto theta = acos(-p.y());
-            auto phi = atan2(-p.z(), p.x()) + pi;
-            u = phi / (2*pi);
-            v = theta / pi;
-        }
+        static void get_sphere_uv(const point3& p, float& u, float& v);
 };
 bool sphere::hit(const ray& r, float t_min, float t_max, hit_record& rec) const {   
     vec3 oc = r.origin() - center;        
@@ -36,7 +29,7 @@ bool sphere::hit(const ray& r, float t_min, float t_max, hit_record& rec) const 
             rec.t = t;      
             rec.p = r.point_at_parameter(rec.t); 
             vec3 outward_normal  = (rec.p - center) / radius; 
-            rec.set_face_normal(r, outward_normal);
+            rec.setNormal(outward_normal);
             get_sphere_uv(outward_normal, rec.u, rec.v);
             rec.mat_ptr = mat_ptr;
             return true;
@@ -49,5 +42,11 @@ bool sphere::bounding_box(float time0, float time1, aabb& output_box) const {
         center - vec3(radius, radius, radius),
         center + vec3(radius, radius, radius));
     return true;
+}
+void sphere::get_sphere_uv(const point3& p, float& u, float& v) {
+    auto theta = acos(-p.y());
+    auto phi = atan2(-p.z(), p.x()) + pi;
+    u = phi / (2*pi);
+    v = theta / pi;
 }
 #endif

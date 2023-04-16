@@ -10,13 +10,14 @@ class material;
 struct hit_record{
     float t;//命中记录的时间
     vec3 p; //命中点的位置
+    private:
     vec3 normal; //命中点的单位法向量
+    public:
     shared_ptr<material> mat_ptr;
     float u,v;//命中点的纹理坐标
-    void set_face_normal(const ray& r, const vec3& vec)
-    {
-        normal = vec.normalized();
-    }
+    void setNormal( const vec3& vec){normal = vec.normalized();}
+    vec3 getNormal()const{return normal;}//获取法向量,
+    
 };//For forward declarations.  This is a structure.  It is not an actual class.  It is just a way of passing data
 
 //抽象量，所有射线可以命中的物体的抽象
@@ -64,7 +65,7 @@ bool translate::hit(const ray& r, float t_min, float t_max, hit_record& rec) con
         return false;
 
     rec.p += offset;
-    rec.set_face_normal(moved_r, rec.normal);
+    //rec.set_face_normal(moved_r, rec.normal);
 
     return true;
 }
@@ -145,16 +146,16 @@ bool rotate_y::hit(const ray& r, float t_min, float t_max, hit_record& rec) cons
         return false;
 
     auto p = rec.p;
-    auto normal = rec.normal;
+    auto normal = rec.getNormal();
 
     p[0] =  cos_theta*rec.p[0] + sin_theta*rec.p[2];
     p[2] = -sin_theta*rec.p[0] + cos_theta*rec.p[2];
 
-    normal[0] =  cos_theta*rec.normal[0] + sin_theta*rec.normal[2];
-    normal[2] = -sin_theta*rec.normal[0] + cos_theta*rec.normal[2];
+    normal[0] =  cos_theta*rec.getNormal()[0] + sin_theta*rec.getNormal()[2];
+    normal[2] = -sin_theta*rec.getNormal()[0] + cos_theta*rec.getNormal()[2];
 
     rec.p = p;
-    rec.set_face_normal(rotated_r, normal);
+    rec.setNormal( normal);
 
     return true;
 }
