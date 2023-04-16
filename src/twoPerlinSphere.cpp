@@ -58,32 +58,64 @@ hitable_list random_scene()
 
     return world;
 }
+hitable_list two_spheres(){
+    hitable_list objects;
+
+    auto checker = make_shared<checker_texture>(color(0.2, 0.3, 0.1), color(0.9, 0.9, 0.9));
+
+    objects.add(make_shared<sphere>(point3(0,-10, 0), 10, make_shared<lambertian>(checker)));
+    objects.add(make_shared<sphere>(point3(0, 10, 0), 10, make_shared<lambertian>(checker)));
+
+    return objects;
+}
+hitable_list two_perlin_spheres() {
+    hitable_list objects;
+
+    auto pertext = make_shared<noise_texture>(4);
+    objects.add(make_shared<sphere>(point3(0,-1000,0), 1000, make_shared<lambertian>(pertext)));
+    objects.add(make_shared<sphere>(point3(0, 2, 0), 2, make_shared<lambertian>(pertext)));
+
+    return objects;
+}
 int main(int argc, char* argv[])
 {
     if(argc!=2){
         std::cout<<"Usage : ./main <filename>"<<std::endl;
         exit(1);
     }
-    auto aspect_ratio = 16.0 / 9.0;
-    int image_width = 400;
-    int samples_per_pixel = 10;
-    const int max_depth = 3;//递归最大深度
-    float dist_to_focus = 10.0;//表示摄像机焦点到透镜的距离
-    float aperture = 1.0;//透镜光圈大小
-    int image_height = static_cast<int>(image_width / aspect_ratio);
-
     srand(time(NULL));
 
-    hitable_list world = random_scene();//Create a world containing the two objects.  You can use any other objects you like.
-
     
+    //world
+    hitable_list world = random_scene();//Create a world containing the two objects.  You can use any other objects you like.
+    switch (0) {
+        case 1:
+            world = random_scene();
+            break;
+        case 2:
+            world = two_spheres();
+            break;
+        default:
+        case 3:
+            world = two_perlin_spheres();
+            break;
+    }
+
+    //camera
     vec3 lookfrom(13,2,3);//相机位置
     vec3 lookat(0,0,0);//相机目标点
     vec3 vup(0,1,0);//相机up向量
-    
-
-    //快门时间设置到0至1秒内
+    auto vfov = 40.0;
+    float aperture = 0.0;//相机透镜光圈大小,越大越模糊
+    auto aspect_ratio = 16.0 / 9.0;
+    float dist_to_focus = 10.0;//表示摄像机焦点到透镜的距离
     camera cam(lookfrom, lookat, vup, 20, aspect_ratio, aperture, dist_to_focus, 0.0, 1.0);
+    
+    //renderer
+    int image_width = 400;
+    int image_height = static_cast<int>(image_width / aspect_ratio);
+    const int max_depth = 50;//递归最大深度
+    int samples_per_pixel = 100;
     renderer ren(world,cam,image_width,image_height,argv[1],samples_per_pixel,max_depth);
     ren.render();
     return 0;

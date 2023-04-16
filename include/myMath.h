@@ -2,6 +2,7 @@
 #define MYMATH_H
 #include <stdlib.h>
 #include <math.h>
+#include "vec3.h"
 #define MAXFLOAT 3.402823E38
 static unsigned long long seed = 1;
 
@@ -17,6 +18,36 @@ void srand48(unsigned int i)
 {
     seed  = (((long long int)i) << 16) | rand();
 }
-
-
+vec3 random_in_unit_disk()
+{
+    vec3 p;
+    do{
+        p = 2.0 * vec3(drand48(),drand48(),0) - vec3(1,1,0);
+    }while(dot(p,p)>=1.0);
+    return p;
+}
+float random_float(float t0 = 0.0,float t1 = 0.1)
+{
+    float ratio = (float)(rand()%1000)/1000.f;
+    return t0 + ratio * (t1-t0);
+}
+int random_int(int min, int max) {
+    // Returns a random integer in [min,max].
+    return static_cast<int>(random_float(min, max+1));
+}
+//返回一个由一个虚拟单位球的球心到该球体内任意一点（不超过球体边界）的长度方向向量
+vec3 random_in_unit_sphere(){
+    vec3 p;
+    do{
+        p = 2.0 * vec3(drand48(),drand48(),drand48()) - vec3(1,1,1);
+    }while(dot(p,p)>=1.0);
+    return p;
+}
+//返回一个每一项都在[0,1]之间的向量
+vec3 random_vec3(){
+    float x = (float)(rand()%1000)/1000.f;
+    float y = (float)(rand()%1000)/1000.f;
+    float z = (float)(rand()%1000)/1000.f;
+    return vec3(x,y,z);
+}
 #endif

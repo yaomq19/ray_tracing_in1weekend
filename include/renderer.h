@@ -13,12 +13,13 @@ class renderer
     int rslu_hor;
     int rslu_ver;
     int msaa;
+    int m_depth;
 
     hitable_list world;
     char *filename;
     public:
-    renderer(hitable_list world,const camera&cam,int rslu_hor,int rslu_ver,char *filename,int msaa=4):world(world),cam(cam)
-    {
+    renderer(hitable_list world,const camera&cam,int rslu_hor,int rslu_ver,char *filename,int msaa,int depth):world(world),cam(cam)
+    ,m_depth(depth){
         this->rslu_hor=rslu_hor;
         this->rslu_ver=rslu_ver;
         this->msaa=msaa;
@@ -26,9 +27,6 @@ class renderer
     }
     void render()
     {
-        
-    
-    
         std::ofstream ofs(filename);
         ofs<<"P3\n"<<rslu_hor<<" "<<rslu_ver<<"\n255\n";
 
@@ -68,7 +66,9 @@ class renderer
         if(world.hit(r,0.0,MAXFLOAT,rec)){
             ray scattered;
             vec3 attenuation;
-            if(depth<50 && rec.mat_ptr->scatter(r,rec,attenuation,scattered)){
+            //如果递归深度小于50且击中点rec的材质成功反射了光线
+            if(depth<m_depth && rec.mat_ptr->scatter(r,rec,attenuation,scattered)){
+                //attenuation为击中点材质的固有色
                 return attenuation * color(scattered,world,depth+1);
             }else{
                 return vec3(0,0,0);

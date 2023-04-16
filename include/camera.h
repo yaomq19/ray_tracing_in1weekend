@@ -2,19 +2,7 @@
 #define CAMERAH
 #include <ray.h>
 #include<fstream>
-vec3 random_in_unit_disk()
-{
-    vec3 p;
-    do{
-        p = 2.0 * vec3(drand48(),drand48(),0) - vec3(1,1,0);
-    }while(dot(p,p)>=1.0);
-    return p;
-}
-float random_float(float t0,float t1)
-{
-    float ratio = (float)(rand()%1000)/1000.f;
-    return t0 + ratio * (t1-t0);
-}
+
 class camera{
     private:
     vec3 origin;//相机位置
@@ -23,7 +11,7 @@ class camera{
     vec3 horizontal;//指向水平视野正右方，其长度表示成像平面的横向宽度
     vec3 vertical;//指向水平视野正上方，其长度表示成像平面的纵向长度
 
-    float lens_radius;//相机透镜的半径
+    float lens_radius;//光圈半径
     float time0,time1;//快门起始时间和结束时间,该世界的时间起点为摄像机，即射线从相机出发那一刻为原点0
     
     public:
@@ -42,12 +30,13 @@ class camera{
             right = cross(vup, back).normalized();
             up = cross(back, right).normalized();
 
+            //focus_dist:焦点到成像平面的距离
             origin = lookfrom;
             horizontal = focus_dist * viewport_width * right;
             vertical = focus_dist * viewport_height * up;
             lower_left_corner = origin - horizontal/2 - vertical/2 - focus_dist * back;
 
-            lens_radius = aperture / 2;//将透镜半径设置成焦距的一半
+            lens_radius = aperture / 2;//光圈半径为光圈直径的一半
             time0 = _time0;
             time1 = _time1;
     }

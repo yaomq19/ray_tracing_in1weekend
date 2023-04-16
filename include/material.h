@@ -49,6 +49,7 @@ class lambertian:public material{
                 scatter_direction = rec.normal;
         //注意不改变光线的产生时间，也就是把反射后的光线看成与之前的同一条
         scattered = ray(rec.p, scatter_direction, r_in.time());
+        //击中点材质的固有色由纹理产生
         attenuation = albedo->value(rec.u, rec.v, rec.p);
         return true;
     }

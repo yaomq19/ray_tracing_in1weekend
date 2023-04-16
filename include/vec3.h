@@ -1,7 +1,7 @@
 #ifndef VEC3H
 #define VEC3H
-#include <myMath.h>
 #include <stdlib.h>
+#include <math.h>
 #include <iostream>
 class vec3{
     public:
@@ -81,6 +81,12 @@ class vec3{
         const auto s = 1e-8; // 定义一个很小的常量
         return (fabs(x()) < s) && (fabs(y()) < s) && (fabs(z()) < s);
     }
+    static vec3 random(float min,float max){
+        float a = ((float)(rand()%10000)/5000.f) - 1.0;
+        float b = ((float)(rand()%10000)/5000.f) - 1.0;
+        float c = ((float)(rand()%10000)/5000.f) - 1.0;
+        return vec3(a,b,c);
+    }
     void print()
     {
         std::cout<<e[0]<<" "<<e[1]<<" "<<e[2]<<std::endl;
@@ -114,19 +120,5 @@ inline vec3 unit_vector(vec3 v){
     else return vec3(0,0,0);
 }
 
-//返回一个由一个虚拟单位球的球心到该球体内任意一点（不超过球体边界）的长度方向向量
-vec3 random_in_unit_sphere(){
-    vec3 p;
-    do{
-        p = 2.0 * vec3(drand48(),drand48(),drand48()) - vec3(1,1,1);
-    }while(dot(p,p)>=1.0);
-    return p;
-}
-//返回一个每一项都在[0,1]之间的向量
-vec3 random_vec3(){
-    float x = (float)(rand()%1000)/1000.f;
-    float y = (float)(rand()%1000)/1000.f;
-    float z = (float)(rand()%1000)/1000.f;
-    return vec3(x,y,z);
-}
+
 #endif

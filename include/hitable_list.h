@@ -9,6 +9,7 @@ class hitable_list:public hitable{
     vector<shared_ptr<hitable>> list;
 
     hitable_list(){}
+    hitable_list(std::shared_ptr<hitable> obj){add(obj);}
     //对所有hitable*进行测试，在返回值处返回是否有命中，并在rec处返回离屏幕最近的一个点的命中记录
     virtual bool hit(const ray& r,float tmin,float tmax, hit_record& rec) const; 
     virtual bool bounding_box(
