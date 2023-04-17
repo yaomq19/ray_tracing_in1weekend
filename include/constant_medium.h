@@ -6,16 +6,8 @@
 
 class constant_medium : public hitable {
     public:
-        constant_medium(shared_ptr<hitable> b, float d, shared_ptr<texture> a)
-            : boundary(b),
-              neg_inv_density(-1/d),
-              phase_function(make_shared<isotropic>(a))
-            {}
-        constant_medium(shared_ptr<hitable> b, float d, color c)
-            : boundary(b),
-              neg_inv_density(-1/d),
-              phase_function(make_shared<isotropic>(c))
-            {}
+        constant_medium(shared_ptr<hitable> b, float d, shared_ptr<texture> a);
+        constant_medium(shared_ptr<hitable> b, float d, color c);
         virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const;
         virtual bool bounding_box(float time0, float time1, aabb& output_box) const;
 
