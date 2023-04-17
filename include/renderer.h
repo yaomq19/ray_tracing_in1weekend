@@ -37,5 +37,4 @@ private://私有函数
     //求r射线和bvh世界的相交颜色,范围[0,1]
     color ray_color(const ray&r,bvh_node bvh,int&& depth);
 };
-
 #endif

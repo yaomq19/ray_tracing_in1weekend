@@ -26,14 +26,15 @@ class checker_texture : public texture {
         //u和v又决定了在这张图片的什么位置取色，所以说是一个五维纹理
     public:
         checker_texture();
-        checker_texture(shared_ptr<texture> _even, shared_ptr<texture> _odd);
-        checker_texture(color c1, color c2);
+        checker_texture(shared_ptr<texture> _even, shared_ptr<texture> _odd, float den);
+        checker_texture(color c1, color c2, float den);
         //其实这是一个五维纹理，p的三个坐标决定了选哪张图片作为纹理
         //u和v又决定了在这张图片的什么位置取色，所以说是一个五维纹理
         virtual color value(float u, float v, const point3& p) const override;
-    public:
+    private:
         shared_ptr<texture> odd;
         shared_ptr<texture> even;
+        float density;
 };
 
 class noise_texture : public texture {

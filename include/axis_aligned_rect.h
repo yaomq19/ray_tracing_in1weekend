@@ -6,8 +6,7 @@
 class xy_rect : public hitable {
     public:
         xy_rect() {}
-        xy_rect(float _x0, float _x1, float _y0, float _y1, float _k, 
-            shared_ptr<material> mat,vec3 n)
+        xy_rect(float _x0, float _x1, float _y0, float _y1, float _k, shared_ptr<material> mat,vec3 n)
             : x0(_x0), x1(_x1), y0(_y0), y1(_y1), k(_k), mp(mat),normal(n) {};
         virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const override;
         virtual bool bounding_box(float time0, float time1, aabb& output_box) const override;
@@ -19,21 +18,14 @@ class xy_rect : public hitable {
 class xz_rect : public hitable {
     public:
         xz_rect() {}
-
-        xz_rect(float _x0, float _x1, float _z0, float _z1, float _k,
-            shared_ptr<material> mat,vec3 n)
+        xz_rect(float _x0, float _x1, float _z0, float _z1, float _k,shared_ptr<material> mat,vec3 n)
             : x0(_x0), x1(_x1), z0(_z0), z1(_z1), k(_k), mp(mat),normal(n) {};
-
         virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const override;
-
         virtual bool bounding_box(float time0, float time1, aabb& output_box) const override {
-            // The bounding box must have non-zero width in each dimension, so pad the Y
-            // dimension a small amount.
             output_box = aabb(point3(x0,k-0.0001,z0), point3(x1, k+0.0001, z1));
             return true;
         }
-
-    public:
+    private:
         shared_ptr<material> mp;
         float x0, x1, z0, z1, k;
         vec3 normal;
@@ -55,7 +47,7 @@ class yz_rect : public hitable {
             return true;
         }
 
-    public:
+    private:
         shared_ptr<material> mp;
         float y0, y1, z0, z1, k;
         vec3 normal;

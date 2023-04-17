@@ -8,19 +8,39 @@
 using namespace std;
 class material;
 struct hit_record{
+public:
+    inline void setNormal(const vec3& norm){normal = norm.normalized();}
+    inline vec3 getNormal()const{return normal;}
+    inline vec3& getNormal(){return normal;}
+
+    inline void setTime(float time){t=time;}
+    inline float getTime()const{return t;}
+    inline float& getTime(){return t;}
+
+    inline void setPos(const vec3& pos){p=pos;}
+    inline vec3 getPos()const{return p;}
+    inline vec3& getPos(){return p;}
+
+    inline void setU(float uu){u=uu;}
+    inline float getU()const{return u;}
+    inline float& getU(){return u;}
+
+    inline void setV(float vv){v=vv;}
+    inline float getV()const{return v;}
+    inline float& getV(){return v;}
+
+    inline void setMat(shared_ptr<material> ptr){mat_ptr=ptr;}
+    inline shared_ptr<material> getMat()const{return mat_ptr;}
+    inline shared_ptr<material>& getMat(){return mat_ptr;}
+private:
     float t;//命中记录的时间
     vec3 p; //命中点的位置
-    private:
     vec3 normal; //命中点的单位法向量
-    public:
-    shared_ptr<material> mat_ptr;
     float u,v;//命中点的纹理坐标
-    void setNormal( const vec3& vec);
-    vec3 getNormal()const;
-    
+    shared_ptr<material> mat_ptr;//命中点的材质
 };
 
-//抽象量，所有射线可以命中的物体的抽象
+//所有射线可以命中的物体的抽象
 class hitable{
     public:
     /*
@@ -34,31 +54,6 @@ class hitable{
         time0 and time1是物体运动的开始时间和结束时间，用来计算output_box的大小
     */
     virtual bool bounding_box(float time0, float time1, aabb& output_box) const = 0;
+};
 
-    /*
-        返回既包围box0又包围box1的大包围盒
-    */
-    aabb surrounding_box(aabb box0, aabb box1) const;
-};
-class translate : public hitable {
-    public:
-        translate(shared_ptr<hitable> p, const vec3& displacement);
-        virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const override;
-        virtual bool bounding_box(float time0, float time1, aabb& output_box) const override;
-    public:
-        shared_ptr<hitable> ptr;
-        vec3 offset;
-};
-class rotate_y : public hitable {
-    public:
-        rotate_y(shared_ptr<hitable> p, float angle);
-        virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const override;
-        virtual bool bounding_box(float time0, float time1, aabb& output_box) const override;
-    public:
-        shared_ptr<hitable> ptr;
-        float sin_theta;
-        float cos_theta;
-        bool hasbox;
-        aabb bbox;
-};
 #endif

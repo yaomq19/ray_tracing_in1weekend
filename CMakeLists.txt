@@ -3,11 +3,12 @@ project(rayTracing)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_BUILD_TYPE DEBUG)
 add_library(rayTracingLib STATIC 
+./src/transform.cpp
+./src/aabb.cpp
 ./src/axis_aligned_rect.cpp
 ./src/box.cpp
 ./src/bvh.cpp
 ./src/camera.cpp
-./src/hitable.cpp
 ./src/hitable_list.cpp
 ./src/material.cpp
 ./src/movingSphere.cpp
@@ -16,10 +17,11 @@ add_library(rayTracingLib STATIC
 ./src/ray.cpp
 ./src/renderer.cpp
 ./src/sphere.cpp
-./src/texture.cpp)
+./src/texture.cpp
+./src/constant_medium.cpp)
 
 
-add_executable(rayTracing ./src/cornellBox.cpp)
+add_executable(rayTracing ./src/trans.cpp)
 target_include_directories(rayTracingLib
     PRIVATE
     "./include"

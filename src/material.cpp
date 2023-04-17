@@ -12,14 +12,14 @@ bool lambertian::scatter(const ray& r_in,const hit_record& rec,vec3& attenuation
     if (scatter_direction.near_zero())
             scatter_direction = rec.getNormal();
     //注意不改变光线的产生时间，也就是把反射后的光线看成与之前的同一条
-    scattered = ray(rec.p, scatter_direction, r_in.time());
+    scattered = ray(rec.getPos(), scatter_direction, r_in.time());
     //击中点材质的固有色由纹理产生
-    attenuation = albedo->value(rec.u, rec.v, rec.p);
+    attenuation = albedo->value(rec.getU(), rec.getV(), rec.getPos());
     return true;
 }
 bool metal::scatter(const ray& r_in,const hit_record& rec,vec3& attenuation,ray& scattered)const{
     vec3 reflected = reflect(unit_vector(r_in.direction()),rec.getNormal());
-    scattered = ray(rec.p,reflected+fuzz*random_in_unit_sphere(),r_in.time());
+    scattered = ray(rec.getPos(),reflected+fuzz*random_in_unit_sphere(),r_in.time());
     attenuation = albedo;
     //保证了r_in不是从平面的背面射来的
     return (dot(scattered.direction(),rec.getNormal())>0);
@@ -50,13 +50,13 @@ bool dielectric::scatter(const ray& r_in,const hit_record& rec,vec3& attenuation
         reflect_prob  = schlick(cosine,ref_idx);//schlick函数的输入是射线cosine和射线refraction ratio
     }
     else{//如果不可逆 或者 射线refraction ratio 小于1 或者 射线refraction ratio 大
-        scatter = ray(rec.p,reflected,r_in.time());//向量reflect函数的输入是向量v和向量向量n
+        scatter = ray(rec.getPos(),reflected,r_in.time());//向量reflect函数的输入是向量v和向量向量n
         reflect_prob=1.0f;//这里的attenuation是一个空的向量，大于1的话，则是一个向量，其
     }
     if(drand48()<reflect_prob){
-        scatter = ray(rec.p,reflected,r_in.time());//向量reflect函数的输入是向量v和向量向量n 或者是向量v和向量向量n的反 或者是向量v和向量向量n的反 或者是向量v和向量向量n的反 或者是向量v和向量向量n的反 或者是向量v和向量向量n的反 或者是向量v和向量向量n的反 或者是向
+        scatter = ray(rec.getPos(),reflected,r_in.time());//向量reflect函数的输入是向量v和向量向量n 或者是向量v和向量向量n的反 或者是向量v和向量向量n的反 或者是向量v和向量向量n的反 或者是向量v和向量向量n的反 或者是向量v和向量向量n的反 或者是向量v和向量向量n的反 或者是向
     }else{
-        scatter = ray(rec.p,refracted,r_in.time());
+        scatter = ray(rec.getPos(),refracted,r_in.time());
     }
     return true;
 }
@@ -84,4 +84,15 @@ bool diffuse_light::scatter(const ray& r_in, const hit_record& rec, color& atten
 }
 color diffuse_light::emitted(double u, double v, const point3& p) const {
     return emit->value(u, v, p);
+}
+
+isotropic::isotropic(color c) : albedo(make_shared<solid_color>(c)) {}
+isotropic::isotropic(shared_ptr<texture> a) : albedo(a) {}
+
+bool isotropic::scatter(
+    const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered
+) const{
+    scattered = ray(rec.getPos(), random_in_unit_sphere(), r_in.time());
+    attenuation = albedo->value(rec.getU(), rec.getV(), rec.getPos());
+    return true;
 }

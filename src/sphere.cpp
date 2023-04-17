@@ -11,12 +11,12 @@ bool sphere::hit(const ray& r, float t_min, float t_max, hit_record& rec) const 
     if (dis > 0.0) {      
         float t = (-b - sqrt(dis)) / a;        
         if (t_min < t && t < t_max) {     
-            rec.t = t;      
-            rec.p = r.point_at_parameter(rec.t); 
-            vec3 outward_normal  = (rec.p - center) / radius; 
+            rec.setTime(t);      
+            rec.setPos(r.point_at_parameter(rec.getTime()));
+            vec3 outward_normal  = (rec.getPos() - center) / radius; 
             rec.setNormal(outward_normal);
-            get_sphere_uv(outward_normal, rec.u, rec.v);
-            rec.mat_ptr = mat_ptr;
+            get_sphere_uv(outward_normal, rec.getU(), rec.getV());
+            rec.setMat(mat_ptr);
             return true;
         }
     }        

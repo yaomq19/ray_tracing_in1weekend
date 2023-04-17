@@ -1,34 +1,26 @@
-#include "hitable.h"
-void hit_record::setNormal( const vec3& vec){normal = vec.normalized();}
-vec3 hit_record::getNormal()const{return normal;}//获取法向量,
-aabb hitable::surrounding_box(aabb box0, aabb box1) const{
-    vec3 small(fmin(box0.min().x(), box1.min().x()),
-                fmin(box0.min().y(), box1.min().y()),
-                fmin(box0.min().z(), box1.min().z()));
-    vec3 big(fmax(box0.max().x(), box1.max().x()),
-            fmax(box0.max().y(), box1.max().y()),
-            fmax(box0.max().z(), box1.max().z()));
-    return aabb(small,big);
-}
+#include "transform.h"
 translate::translate(shared_ptr<hitable> p, const vec3& displacement): ptr(p), offset(displacement) {}
 bool translate::hit(const ray& r, float t_min, float t_max, hit_record& rec) const {
+    /*
+    先将光线 r 沿着相反的方向平移 offset，然后调用 ptr->hit 计算平移后的光线是否与包含的物体相交，
+    并将结果存储在 rec 中。最后，将 rec 中的交点 p 再平移回原来的位置。
+    */
     ray moved_r(r.origin() - offset, r.direction(), r.time());
     if (!ptr->hit(moved_r, t_min, t_max, rec))
         return false;
-
-    rec.p += offset;
-    //rec.set_face_normal(moved_r, rec.normal);
-
+    rec.setPos(rec.getPos()+ offset);
     return true;
 }
 bool translate::bounding_box(float time0, float time1, aabb& output_box) const {
+    /*
+        首先计算出平移之前物体的包围盒 output_box，然后将其平移 offset，
+        得到平移后的包围盒。
+    */
     if (!ptr->bounding_box(time0, time1, output_box))
         return false;
-
     output_box = aabb(
         output_box.min() + offset,
         output_box.max() + offset);
-
     return true;
 }
 rotate_y::rotate_y(shared_ptr<hitable> p, float angle) : ptr(p) {
@@ -77,16 +69,16 @@ bool rotate_y::hit(const ray& r, float t_min, float t_max, hit_record& rec) cons
     if (!ptr->hit(rotated_r, t_min, t_max, rec))
         return false;
 
-    auto p = rec.p;
+    auto p = rec.getPos();
     auto normal = rec.getNormal();
 
-    p[0] =  cos_theta*rec.p[0] + sin_theta*rec.p[2];
-    p[2] = -sin_theta*rec.p[0] + cos_theta*rec.p[2];
+    p[0] =  cos_theta*rec.getPos()[0] + sin_theta*rec.getPos()[2];
+    p[2] = -sin_theta*rec.getPos()[0] + cos_theta*rec.getPos()[2];
 
     normal[0] =  cos_theta*rec.getNormal()[0] + sin_theta*rec.getNormal()[2];
     normal[2] = -sin_theta*rec.getNormal()[0] + cos_theta*rec.getNormal()[2];
 
-    rec.p = p;
+    rec.setPos(p);
     rec.setNormal( normal);
 
     return true;

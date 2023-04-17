@@ -55,9 +55,9 @@ color renderer::ray_color(const ray&r,bvh_node bvh,int&& depth){
     if(bvh.hit(r,0.0,MAXFLOAT,rec)){
         ray scattered;
         color attenuation;
-        color emitted = rec.mat_ptr->emitted(rec.u, rec.v, rec.p);
+        color emitted = rec.getMat()->emitted(rec.getU(), rec.getV(), rec.getPos());
         //如果击中点rec的材质成功反射了光线
-        if(rec.mat_ptr->scatter(r,rec,attenuation,scattered))
+        if(rec.getMat()->scatter(r,rec,attenuation,scattered))
             //attenuation为击中点材质的固有色
             return emitted + attenuation * ray_color(scattered,bvh,depth+1);
         else//没有击中说明这个hitable只是个纯光源
@@ -76,13 +76,13 @@ color renderer::ray_color(const ray&r,hitable_list world,int&& depth){
     hit_record rec; 
     //如果递归深度大于等于50返回背景色
     if(depth>=m_depth)return background;
-    //如果与世界有击中记录则		
+    //如果与世界有击中记录则把最近的record存入rec	
     if(world.hit(r,0.0,MAXFLOAT,rec)){
         ray scattered;
         color attenuation;
-        color emitted = rec.mat_ptr->emitted(rec.u, rec.v, rec.p);
+        color emitted = rec.getMat()->emitted(rec.getU(), rec.getV(), rec.getPos());
         //如果击中点rec的材质成功反射了光线
-        if(rec.mat_ptr->scatter(r,rec,attenuation,scattered))
+        if(rec.getMat()->scatter(r,rec,attenuation,scattered))
             //attenuation为击中点材质的固有色
             return emitted + attenuation * ray_color(scattered,world,depth+1);
         else//没有击中说明这个hitable只是个纯光源

@@ -25,11 +25,11 @@ bool moving_sphere::hit(const ray& r, float t_min, float t_max, hit_record& rec)
             return false;
     }
 
-    rec.t = root;
-    rec.p = r.at(rec.t);
-    auto outward_normal = (rec.p - center(r.time())) / radius;
+    rec.setTime(root);
+    rec.setPos(r.at(rec.getTime()));
+    auto outward_normal = (rec.getPos() - center(r.time())) / radius;
     rec.setNormal(outward_normal);
-    rec.mat_ptr = mat_ptr;
+    rec.setMat(mat_ptr);
 
     return true;
 }

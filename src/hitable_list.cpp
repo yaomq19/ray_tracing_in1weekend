@@ -8,7 +8,7 @@ bool hitable_list::hit(const ray& r,float tmin,float tmax, hit_record& rec) cons
         if(it->hit(r,tmin,closest_so_far,temp_rec)){
             hit_anything = true;
             //将最近值更新为最新测试通过的一个值
-            closest_so_far = temp_rec.t;
+            closest_so_far = temp_rec.getTime();
             //更新为最近值
             rec = temp_rec;
         }

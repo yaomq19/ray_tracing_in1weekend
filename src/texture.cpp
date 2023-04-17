@@ -8,10 +8,10 @@ color solid_color::value(float u, float v, const vec3& p) const {
 }
 
 checker_texture::checker_texture() {}
-checker_texture::checker_texture(shared_ptr<texture> _even, shared_ptr<texture> _odd): even(_even), odd(_odd) {}
-checker_texture::checker_texture(color c1, color c2): even(make_shared<solid_color>(c1)) , odd(make_shared<solid_color>(c2)) {}
+checker_texture::checker_texture(shared_ptr<texture> _even, shared_ptr<texture> _odd, float den): even(_even), odd(_odd),density(den) {}
+checker_texture::checker_texture(color c1, color c2,float den): even(make_shared<solid_color>(c1)) , odd(make_shared<solid_color>(c2)) ,density(den){}
 color checker_texture::value(float u, float v, const point3& p) const{
-    auto sines = sin(10*p.x())*sin(10*p.y())*sin(10*p.z());
+    auto sines = sin(density*p.x())*sin(density*p.y())*sin(density*p.z());
     if (sines < 0)
         return odd->value(u, v, p);
     else
