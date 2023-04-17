@@ -1,4 +1,6 @@
 #include "myMath.h"
+#include <random>
+#include "vec3.h"
 static unsigned long long seed = 1;
 double drand48(void)
 {
@@ -19,10 +21,8 @@ vec3 random_in_unit_disk()
     }while(dot(p,p)>=1.0);
     return p;
 }
-float random_float(float t0,float t1)
-{
-    float ratio = (float)(rand()%1000)/1000.f;
-    return t0 + ratio * (t1-t0);
+float random_float(float min, float max) {
+    return rand() / (double)RAND_MAX *(max - min) + min;
 }
 int random_int(int min, int max) {
     // Returns a random integer in [min,max].
@@ -37,9 +37,6 @@ vec3 random_in_unit_sphere(){
     return p;
 }
 //返回一个每一项都在[0,1]之间的向量
-vec3 random_vec3(){
-    float x = (float)(rand()%1000)/1000.f;
-    float y = (float)(rand()%1000)/1000.f;
-    float z = (float)(rand()%1000)/1000.f;
-    return vec3(x,y,z);
+vec3 random_vec3_0to1(){
+    return vec3(random_float(0.0,1.0),random_float(0.0,1.0),random_float(0.0,1.0));
 }

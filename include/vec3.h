@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <math.h>
 #include <iostream>
+#include <random>
+#include "myMath.h"
 class vec3;
 typedef vec3 point3;
 typedef vec3 color;
@@ -82,14 +84,7 @@ class vec3{
         return (fabs(x()) < s) && (fabs(y()) < s) && (fabs(z()) < s);
     }
     static vec3 random(float min,float max){
-        float newmax = max *10000.0;
-        float newmin = min *10000.0;
-        int scale = (int)newmax - (int)newmin;
-        
-        float a = ((float)(rand()%10000)/5000.f) - 1.0;
-        float b = ((float)(rand()%10000)/5000.f) - 1.0;
-        float c = ((float)(rand()%10000)/5000.f) - 1.0;
-        return vec3(a,b,c);
+        return vec3(random_float(min,max),random_float(min,max),random_float(min,max));
     }
     void print()
     {

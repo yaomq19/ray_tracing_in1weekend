@@ -2,7 +2,7 @@
 #define MYMATH_H
 #include <stdlib.h>
 #include <math.h>
-#include "vec3.h"
+class vec3;
 #define MAXFLOAT (3.402823E38)
 //生成一个均匀分布与[0,1]的double随机数
 double drand48(void);
