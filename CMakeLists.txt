@@ -21,7 +21,7 @@ add_library(rayTracingLib STATIC
 ./src/constant_medium.cpp)
 
 
-add_executable(rayTracing ./src/finalScene.cpp)
+add_executable(rayTracing ./src/MC.cpp)
 target_include_directories(rayTracingLib
     PRIVATE
     "./include"
