@@ -8,6 +8,8 @@
 #include "bvh.h"
 #include "material.h"
 #include "vec3.h"
+#include <vector>
+#include "external/thread_pool.h"
 class renderer
 {
 public://接口
@@ -30,7 +32,7 @@ private://成员变量
     camera cam;//相机
     hitable_list world;//需要渲染的世界
     bvh_node bvh;//需要渲染的世界封装成的BVH加速结构
-
+    std::vector<std::vector<vec3>> buffer;//渲染缓冲区
 private://私有函数
     //求r射线和world世界的相交颜色,范围[0,1]
     color ray_color(const ray&r,hitable_list world,int&& depth);

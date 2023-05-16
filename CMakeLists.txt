@@ -18,10 +18,11 @@ add_library(rayTracingLib STATIC
 ./src/renderer.cpp
 ./src/sphere.cpp
 ./src/texture.cpp
-./src/constant_medium.cpp)
+./src/constant_medium.cpp
+./src/thread_pool.cpp)
 
 
-add_executable(rayTracing ./src/MC.cpp)
+add_executable(rayTracing ./src/main.cpp)
 target_include_directories(rayTracingLib
     PRIVATE
     "./include"

@@ -1,14 +1,19 @@
 #include "renderer.h"
+#include<thread>
 renderer::renderer(hitable_list world,const camera&cam,int rslu_hor,int rslu_ver,int msaa,int depth):world(world),cam(cam)
-,m_depth(depth),bvh(world,0,1){
+,m_depth(depth){
     this->rslu_hor=rslu_hor;
     this->rslu_ver=rslu_ver;
     this->msaa=msaa;
 }
 void renderer::render(char *filename)
 {
-    std::ofstream ofs(filename);
-    ofs<<"P3\n"<<rslu_hor<<" "<<rslu_ver<<"\n255\n";
+    //std::ofstream ofs(filename);
+    //ofs<<"P3\n"<<rslu_hor<<" "<<rslu_ver<<"\n255\n";
+    buffer.resize(rslu_ver);
+    for(auto& it:buffer)
+        it.resize(rslu_hor);
+    
     auto start = std::chrono::steady_clock::now();
     for(int j=rslu_ver-1;j>=0;j--)
     {
@@ -32,13 +37,14 @@ void renderer::render(char *filename)
             int ir = int(255.99*col[0]);
             int ig = int(255.99*col[1]);
             int ib = int(255.99*col[2]);
-            ofs << ir << " " << ig << " " << ib << "\n"; //write it out to the file.  I used 255 for
+            //ofs << ir << " " << ig << " " << ib << "\n"; //write it out to the file.  I used 255 for
+            buffer[rslu_ver-1-j][i] = vec3(ir,ig,ib);
         }
     }
     auto end = std::chrono::steady_clock::now();
     auto diff = end - start;
     std::cout << "Time elapsed: " << std::chrono::duration<double, std::milli>(diff).count() << " ms\n";
-    ofs.close();
+    //ofs.close();
 }
 void renderer::EnableBVH(){
     isBvhEnable = true;
