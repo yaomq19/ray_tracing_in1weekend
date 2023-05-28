@@ -1,9 +1,9 @@
 #ifndef HITABLEH
 #define HITABLEH
-#include <ray.h>
 #include <math.h>
-#include "myMath.h"
 #include <memory>
+#include "ray.h"
+#include "myMath.h"
 #include "aabb.h"
 using namespace std;
 class material;

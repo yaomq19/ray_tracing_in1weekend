@@ -1,4 +1,4 @@
-#include "movingSphere.h"
+#include "hitable/movingSphere.h"
 moving_sphere::moving_sphere() {}
 moving_sphere::moving_sphere(
     vec3 cen0, vec3 cen1, float _time0, float _time1, float r, shared_ptr<material> m)

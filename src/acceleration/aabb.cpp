@@ -1,4 +1,4 @@
-#include"aabb.h"
+#include"acceleration/aabb.h"
 aabb surrounding_box(aabb box0, aabb box1){
     vec3 small(fmin(box0.min().x(), box1.min().x()),
                 fmin(box0.min().y(), box1.min().y()),

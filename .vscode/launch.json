@@ -11,7 +11,7 @@
             "program": "${workspaceFolder}/build/rayTracing.exe",
             "args": ["output.ppm"],
             "stopAtEntry": false,
-            "cwd": "${fileDirname}",
+            "cwd": "${workspaceFolder}/build",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",

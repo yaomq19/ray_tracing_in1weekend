@@ -1,4 +1,4 @@
-#include "sphere.h"
+#include "hitable/sphere.h"
 #define pi (3.1415926535)
 sphere::sphere(){}
 sphere::sphere(vec3 cen,float r,shared_ptr<material> m):center(cen),radius(r),mat_ptr(m){}

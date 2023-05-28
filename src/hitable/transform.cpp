@@ -1,4 +1,4 @@
-#include "transform.h"
+#include "hitable/transform.h"
 translate::translate(shared_ptr<hitable> p, const vec3& displacement): ptr(p), offset(displacement) {}
 bool translate::hit(const ray& r, float t_min, float t_max, hit_record& rec) const {
     /*

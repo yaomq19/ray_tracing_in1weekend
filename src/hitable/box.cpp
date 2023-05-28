@@ -1,4 +1,4 @@
-#include "box.h"
+#include "hitable/box.h"
 box::box(const point3& p0, const point3& p1, shared_ptr<material> ptr) {
     box_min = p0;
     box_max = p1;

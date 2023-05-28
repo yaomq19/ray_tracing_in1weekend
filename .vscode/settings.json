@@ -104,6 +104,17 @@
     "xlocmon": "cpp",
     "xloctime": "cpp",
     "xtree": "cpp",
-    "random": "cpp"
+    "random": "cpp",
+    "condition_variable": "cpp",
+    "coroutine": "cpp",
+    "resumable": "cpp",
+    "functional": "cpp",
+    "future": "cpp",
+    "list": "cpp",
+    "mutex": "cpp",
+    "queue": "cpp",
+    "stop_token": "cpp",
+    "thread": "cpp",
+    "xhash": "cpp"
   }
 }

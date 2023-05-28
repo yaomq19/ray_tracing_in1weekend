@@ -1,4 +1,4 @@
-#include"axis_aligned_rect.h"
+#include"acceleration/axis_aligned_rect.h"
 bool xy_rect::hit(const ray& r, float t_min, float t_max, hit_record& rec) const {
     auto t = (k-r.origin().z()) / r.direction().z();
     if (t <= t_min || t >= t_max)

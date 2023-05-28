@@ -1,4 +1,4 @@
-#include "bvh.h"
+#include "acceleration/bvh.h"
 bvh_node::bvh_node(const hitable_list& list, float time0, float time1):bvh_node(list.getObjects(), 0, list.getObjects().size(), time0, time1){}
 bvh_node::bvh_node(const std::vector<shared_ptr<hitable>>& src_objects,
     size_t start, size_t end, float time0, float time1) {

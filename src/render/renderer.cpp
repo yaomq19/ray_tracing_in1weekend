@@ -1,50 +1,47 @@
 #include "renderer.h"
 #include<thread>
-renderer::renderer(hitable_list world,const camera&cam,int rslu_hor,int rslu_ver,int msaa,int depth):world(world),cam(cam)
-,m_depth(depth){
+renderer::renderer(int rslu_hor,int rslu_ver,int msaa,int depth){
+    cam = nullptr;
+    m_depth=depth;
     this->rslu_hor=rslu_hor;
     this->rslu_ver=rslu_ver;
     this->msaa=msaa;
+    this->buffer.resize(rslu_ver*rslu_hor);
 }
 void renderer::render(char *filename)
 {
-    //std::ofstream ofs(filename);
-    //ofs<<"P3\n"<<rslu_hor<<" "<<rslu_ver<<"\n255\n";
-    buffer.resize(rslu_ver);
-    for(auto& it:buffer)
-        it.resize(rslu_hor);
-    
+    std::ofstream ofs(filename);
+    ofs<<"P3\n"<<rslu_hor<<" "<<rslu_ver<<"\n255\n";
     auto start = std::chrono::steady_clock::now();
     for(int j=rslu_ver-1;j>=0;j--)
     {
         std::cout<<j<<" of "<<rslu_ver<<std::endl;
-        for(int i=0;i<rslu_hor;i++)
-        {
-            vec3 col = vec3(0,0,0);
-            for(int s=0;s<msaa;s++){
-                float u = float(i+drand48())/float(rslu_hor);
-                float v = float(j+drand48())/float(rslu_ver);
-                ray r = cam.get_ray(u,v);
-                if(isBvhEnable)
-                    col += ray_color(r,bvh,0);
-                else
-                    col += ray_color(r,world,0);
-            }
-            //col取值范围[0,1],[0,1],[0,1]
-            col /= float(msaa);
-            //一种gamma校正
-            col = vec3(sqrt(col[0]),sqrt(col[1]),sqrt(col[2]));
-            int ir = int(255.99*col[0]);
-            int ig = int(255.99*col[1]);
-            int ib = int(255.99*col[2]);
-            //ofs << ir << " " << ig << " " << ib << "\n"; //write it out to the file.  I used 255 for
-            buffer[rslu_ver-1-j][i] = vec3(ir,ig,ib);
+        for(int i=0;i<rslu_hor;i++){
+                vec3 col = vec3(0,0,0);
+                for(int s=0;s<msaa;s++){
+                    float u = float(i+drand48())/float(rslu_hor);
+                    float v = float(j+drand48())/float(rslu_ver);
+                    ray r = cam->get_ray(u,v);
+                    if(isBvhEnable)
+                        col += ray_color(r,bvh,0);
+                    else
+                        col += ray_color(r,world,0);
+                }
+                //col取值范围[0,1],[0,1],[0,1]
+                col /= float(msaa);
+                //一种gamma校正
+                col = vec3(sqrt(col[0]),sqrt(col[1]),sqrt(col[2]));
+                int ir = int(255.99*col[0]);
+                int ig = int(255.99*col[1]);
+                int ib = int(255.99*col[2]);
+                
+                ofs<<ir<<" "<<ig<<" "<<ib<<"\n";
         }
     }
     auto end = std::chrono::steady_clock::now();
     auto diff = end - start;
     std::cout << "Time elapsed: " << std::chrono::duration<double, std::milli>(diff).count() << " ms\n";
-    //ofs.close();
+    ofs.close();
 }
 void renderer::EnableBVH(){
     isBvhEnable = true;
@@ -52,6 +49,12 @@ void renderer::EnableBVH(){
 void renderer::setBackground(color input)
 {
     this->background = input;
+}
+void renderer::setWorld(hitable_list* world){
+    this->world = world;
+}
+void renderer::setCamera(camera* cam){
+    this->cam = cam;
 }
 color renderer::ray_color(const ray&r,bvh_node bvh,int&& depth){
     hit_record rec; 
@@ -78,12 +81,12 @@ color renderer::ray_color(const ray&r,bvh_node bvh,int&& depth){
     //     return (1.0-t)*vec3(1.0,1.0,1.0) + t * vec3(0.5,0.7,1.0);
     // }
 }
-color renderer::ray_color(const ray&r,hitable_list world,int&& depth){
+color renderer::ray_color(const ray&r,hitable_list* world,int&& depth){
     hit_record rec; 
     //如果递归深度大于等于50返回背景色
     if(depth>=m_depth)return background;
     //如果与世界有击中记录则把最近的record存入rec	
-    if(world.hit(r,0.0,MAXFLOAT,rec)){
+    if(world->hit(r,0.0,MAXFLOAT,rec)){
         ray scattered;
         color attenuation;
         color emitted = rec.getMat()->emitted(rec.getU(), rec.getV(), rec.getPos());

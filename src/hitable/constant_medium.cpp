@@ -1,4 +1,4 @@
-#include "constant_medium.h"
+#include "hitable/constant_medium.h"
 constant_medium::constant_medium(shared_ptr<hitable> b, float d, shared_ptr<texture> a)
     : boundary(b),
         neg_inv_density(-1/d),
