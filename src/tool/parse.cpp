@@ -5,13 +5,14 @@ camera Parser::parseCamera(std::string filename){
     ifstream ifs(filename);
     if(!ifs.is_open()){
         std::cout<<"Error : Cannot open file "<<filename<<std::endl;
-        exit(1);
+        exit(2);
     }
     vec3 pos,target,up;
     float vfov,aspect_ratio,aperture,focus_dist;
     float exposure_time_start,exposure_time_end;
     std::string attr; 
     while(!ifs.eof()){
+        attr.clear();
         ifs>>attr;
         if(attr == "pos"){
             ifs>>pos[0]>>pos[1]>>pos[2];
@@ -31,7 +32,15 @@ camera Parser::parseCamera(std::string filename){
             ifs>>exposure_time_start;
         }else if(attr == "exposure_time_end"){
             ifs>>exposure_time_end;
-        }else{
+        }else if(
+            attr == "" ||
+            attr == "\n" || 
+            attr == "\r\n" ||
+            attr == "\r" || 
+            attr == " "){
+            ;
+        }
+        else{
             std::cout<<"Error : Unknown attribute "<<attr<<std::endl;
             exit(1);
         }
@@ -43,12 +52,13 @@ renderer Parser::parseRenderer(std::string filename){
     ifstream ifs(filename);
     if(!ifs.is_open()){
         std::cout<<"Error : Cannot open file "<<filename<<std::endl;
-        exit(1);
+        exit(2);
     }
     int image_width,image_height,samples_per_pixel,max_depth;
     vec3 background_color;
     std::string attr;
     while(!ifs.eof()){
+        attr.clear();
         ifs>>attr;
         if(attr == "image_width"){
             ifs>>image_width;
@@ -60,6 +70,13 @@ renderer Parser::parseRenderer(std::string filename){
             ifs>>max_depth;
         }else if(attr == "background_color"){
             ifs>>background_color[0]>>background_color[1]>>background_color[2];
+            background_color/=255.0;
+        }else if(attr == "" ||
+        attr == "\n" || 
+        attr == "\r\n" || 
+        attr == "\r"|| 
+        attr == " "){
+            ;
         }
         else{
             std::cout<<"Error : Unknown attribute "<<attr<<std::endl;
@@ -78,11 +95,13 @@ hitable_list Parser::parseHitableList(std::string filename){
     ifstream ifs(filename);
     if(!ifs.is_open()){
         std::cout<<"Error : Cannot open file "<<filename<<std::endl;
-        exit(1);
+        exit(2);
     }
     std::string attr;
     std::vector<shared_ptr<material>> materials;
+    std::vector<shared_ptr<texture>> tex_ptrs;
     while(!ifs.eof()){
+        attr.clear();
         ifs>>attr;
         if(attr=="materialNum"){
             int materialNum;
@@ -90,16 +109,26 @@ hitable_list Parser::parseHitableList(std::string filename){
             for(int i=0;i<materialNum;i++){
                 int matId;
                 std::string matType;
+                matType.clear();
                 ifs>>matId>>matType;
                 if(matType=="lambertian"){
                     color albedo;
-                    ifs>>albedo[0]>>albedo[1]>>albedo[2];
-                    materials.push_back(make_shared<lambertian>(albedo));
+                    int texid;
+                    ifs>>albedo[0]>>albedo[1]>>albedo[2]>>texid;
+                    albedo/=255.0;
+                    if(texid == 0){
+                        materials.push_back(make_shared<lambertian>(albedo));
+                    }
+                    else{
+                        materials.push_back(make_shared<lambertian>(tex_ptrs[texid-1]));
+                    }
+                        
                 }
                 else if(matType=="metal"){
                     color albedo;
                     float fuzz;
                     ifs>>albedo[0]>>albedo[1]>>albedo[2]>>fuzz;
+                    albedo/=255.0;
                     materials.push_back(make_shared<metal>(albedo,fuzz));
                 }
                 else if(matType=="dielectric"){
@@ -110,6 +139,7 @@ hitable_list Parser::parseHitableList(std::string filename){
                 else if(matType=="diffuse_light"){
                     color emit;
                     ifs>>emit[0]>>emit[1]>>emit[2];
+                    emit/=255.0;
                     materials.push_back(make_shared<diffuse_light>(emit));
                 }
                 else{
@@ -122,13 +152,15 @@ hitable_list Parser::parseHitableList(std::string filename){
             int hitableNum;
             ifs>>hitableNum;
             for(int i=0;i<hitableNum;i++){
-                ifs>>attr;
+                int itid;
+                attr.clear();
+                ifs>>itid>>attr;
                 if(attr=="sphere"){
                     point3 center;
                     float radius;
                     int matId;
                     ifs>>center[0]>>center[1]>>center[2]>>radius>>matId;
-                    shared_ptr<hitable> sp = make_shared<sphere>(center,radius,materials[matId]);
+                    shared_ptr<hitable> sp = make_shared<sphere>(center,radius,materials[matId-1]);
                     res.add(sp);
                 }
             }

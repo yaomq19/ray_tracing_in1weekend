@@ -2,4 +2,4 @@ image_width 400
 image_height 400
 max_depth 50
 samples_per_pixel 100
-background_color 0.2 0.2 0.2
+background_color 50 50 50

@@ -1,1 +1,8 @@
 materialNum 2
+1 lambertian 0 100 100 0
+2 metal 100 100 100 3
+
+hitableNum 3
+1 sphere 0 0 -2 1 1
+2 sphere -2 0 -2 1 2
+3 sphere 2 0 -2 1 2
